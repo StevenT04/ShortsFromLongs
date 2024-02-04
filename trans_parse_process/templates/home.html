@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load crispy_forms_tags %}
 {% load static %}
 
 {% block head_meta %}
@@ -12,7 +13,13 @@
         <h1 class="display-4 fw-bold lh-1">{% trans 'UltraShorts' %}</h1>
         <p class="lead">{% trans 'Making Things Easier' %}</p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-            <a href="{% url 'page_chunks' %}" data-bs-toggle="tooltip" data-bs-title="{% trans 'ChunkTooltip' %}" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">{% trans 'Chunking page' %}</a>
+            <!-- home.html -->
+            <form action="{% url 'page_chunks' %}" method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                 <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Get Transcript Chunks</button>
+            </form>
+
             <a href="{% url 'page_processing' %}" data-bs-toggle="tooltip" data-bs-title="{% trans 'ProcessTooltip' %}"  class="btn btn-outline-dark btn-lg px-4">{% trans 'Processing page' %}</a>
         </div>
     </div>
