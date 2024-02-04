@@ -1,0 +1,21 @@
+{% load static %}
+{% load i18n %}
+
+
+
+<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+
+    <div class="col-md-3 mb-2 mb-md-0">
+        <a href="{% url 'page_home' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <img class="bi me-2" src="{% static 'UltraShorts.svg' %}" width="40" height="40">
+        <span class="fs-4">{% trans 'UltraShorts' %}</span>
+        </a>
+    </div>
+
+    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="{% url 'page_chunks' %}" class="nav-link px-2">{% trans 'Chunks' %}</a></li>
+        <li><a href="{% url 'page_processing' %}" class="nav-link px-2">{% trans 'Processing' %}</a></li>
+        <li><a href="{% url 'page_about' %}" class="nav-link px-2">{% trans 'About' %}</a></li>
+    </ul>
+
+</header>
