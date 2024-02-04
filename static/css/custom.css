@@ -3,17 +3,25 @@
 
 /* Or, if you want to change the background color of the content area specifically */
 
+.bg-light {
+    background-color: #CDBCA3;
+}
+
+.bg-test {
+    color: #003152;
+}
+
 .btn-primary {
     background-color: #1E263D;
     border-color: #0B0C10; /* A slightly darker shade for borders */
 }
 
-.text-primary {
-    color: #CDBCA3 !important;
+.text-body-secondary {
+    color: #000000 !important;
 }
 
-.nav-link {
-    color: #1E263D !important;
+.nav-link, .ultra-shorts-color {
+    color: #008081 !important;
 }
 
 /* Add more customizations as needed */
