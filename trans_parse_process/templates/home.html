@@ -14,7 +14,7 @@
         <p class="lead">{% trans 'Making Things Easier' %}</p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
             <!-- home.html -->
-            <form action="{% url 'page_chunks' %}" method="post">
+            <form method="post" action="{% url 'page_process_form' %}">
                 {% csrf_token %}
                 {{ form|crispy }}
                  <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Get Transcript Chunks</button>

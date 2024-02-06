@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django import forms
 from .forms import ChunkingForm, ProcessingForm  # Assume you have created these forms
@@ -13,22 +13,24 @@ def show_home(request):
 def show_about(request):
     return render(request, 'about.html')
 
-def show_chunks(request):
+def process_form(request):
     if request.method == 'POST':
         form = ChunkingForm(request.POST)
         if form.is_valid():
             # Logic to handle chunking
-            # After processing, perhaps redirect to a success page or display the results
+            # After processing, you can pass necessary data to the chunks page via session or redirect URL
             return HttpResponseRedirect('/chunks/')
         else:
-            # If the form is not valid, re-render the same page with the form
-            # The form will contain the error messages
+            # Redirect back to home with form errors
             return render(request, 'home.html', {'form': form})
-    else:
-        form = ChunkingForm()
-    
-    # If it's a GET request, just show the form as usual
-    return render(request, 'home.html', {'form': form})
+
+    # If not POST, redirect to home page
+    return redirect('page_home')
+
+
+def show_chunks(request):
+    # Assuming this view now handles displaying results or confirmation
+    return render(request, 'chunks.html')
 
 
 def show_processing(request):
