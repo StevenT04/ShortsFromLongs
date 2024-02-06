@@ -18,20 +18,20 @@ def show_chunks(request):
         form = ChunkingForm(request.POST)
         if form.is_valid():
             # Logic to handle chunking
-            pass  # Replace with actual logic
+            # After processing, perhaps redirect to a success page or display the results
+            return HttpResponseRedirect('/chunks/')
+        else:
+            # If the form is not valid, re-render the same page with the form
+            # The form will contain the error messages
+            return render(request, 'home.html', {'form': form})
     else:
         form = ChunkingForm()
-    return render(request, 'chunks.html', {'form': form})
+    
+    # If it's a GET request, just show the form as usual
+    return render(request, 'home.html', {'form': form})
+
 
 def show_processing(request):
     return HttpResponse("No Processing page yet")
-# def show_processing(request):
-#     if request.method == 'POST':
-#         form = ProcessingForm(request.POST)
-#         if form.is_valid():
-#             # Logic to handle processing
-#             pass  # Replace with actual logic
-#     else:
-#         form = ProcessingForm()
-#     return render(request, 'processing.html', {'form': form})
+
 
