@@ -8,7 +8,7 @@ class Video(models.Model):
     url = models.URLField(max_length=1024, unique=True)  # Source URL
     video_file = models.FileField(upload_to='videos/')  # Path to the downloaded video
     title = models.CharField(max_length=255)  # Video title
-    processed = models.BooleanField(default=False)  # Processing status
+    # processed = models.BooleanField(default=False)  # Processing status #TODO: Is this really needed?
     slug = models.SlugField(unique=True, blank=True)  # NEW: Slug field for pretty URLs
 
     def get_absolute_url(self):  # NEW: Method to get absolute URL
@@ -31,7 +31,7 @@ class Video(models.Model):
 class Transcript(models.Model):
     video = models.OneToOneField(Video, on_delete=models.CASCADE)  # Link to the Video
     full_transcript = models.TextField()  # Full transcript text
-    structured_transcript = models.TextField()  # Structured format for processing
+    # structured_transcript = models.TextField()  # Structured format for processing #TODO: Is this really needed?
     # Consider adding a slug or other fields here if needed for direct access or SEO purposes
 
     def __str__(self):

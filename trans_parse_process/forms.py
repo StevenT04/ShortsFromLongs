@@ -3,6 +3,7 @@ import re
 
 class ChunkingForm(forms.Form):
     youtube_url = forms.URLField(label='YouTube URL')
+    youtube_title = forms.CharField(max_length=255)
 
     def clean_youtube_url(self):
         url = self.cleaned_data.get('youtube_url', '')
