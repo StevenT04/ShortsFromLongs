@@ -4,8 +4,8 @@ from django.urls import reverse
 
 class Video(models.Model):
     url = models.URLField(max_length=1024, unique=True)  # Source URL
-    video_file = models.FileField(upload_to='videos/')  # Path to the downloaded video
-    title = models.CharField(max_length=255)  # Video title
+    video_file = models.FileField(upload_to='videos/', unique=True)  # Path to the downloaded video
+    title = models.CharField(max_length=255, unique=True)  # Video title
     slug = models.SlugField(unique=True, blank=True)  # Slug field for pretty URLs
 
     def get_absolute_url(self):
