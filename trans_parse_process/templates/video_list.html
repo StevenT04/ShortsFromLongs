@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block page_title %}
+{% trans "Videos" %}
+{% endblock %}
+
+{% block content %}
+{% if videos %}
+
+<div class="container mt-4">
+    <div class="row">
+        {% for video in videos %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-lg video-card"> <!-- Add shadow for elegant separation -->
+                <img src="{{ video.thumbnail.url }}" class="card-img-top rounded" style="height: 200px; object-fit: cover;"> <!-- Adjusted for rounded corners and cover fit -->
+                <div class="card-body">
+                    <h5 class="card-title">{{ video.title }}</h5>
+                    <a href="{{ video.url }}" class="btn btn-dark"><i class="bi bi-box-arrow-up-right"></i>&nbsp;{% trans 'Original Video' %}</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% else %}
+<div class="text-center mt-4">{% trans 'No Videos' %}</div>
+{% endif %}
+
+<div class="text-left mt-4 btn-group-lg">
+    <a href="{% url 'page_process_form' %}" class="btn btn-light"><i class="bi bi-plus-square"></i>&nbsp;{% trans 'Upload New Video' %}</a>
+</div>
+
+{% endblock %}

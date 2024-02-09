@@ -3,6 +3,8 @@ from pytube import YouTube
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from .models import Video
+from django.contrib import messages
+import requests
 from django import forms
 import os
 from .forms import ChunkingForm, ProcessingForm  # Assume you have created these forms
@@ -19,15 +21,8 @@ def show_about(request):
     return render(request, 'about.html')
 
 def show_video_list(request):
-    return render(request, 'videos.html')
-
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib import messages
-from .forms import ChunkingForm
-from .models import Video
-from pytube import YouTube
-import os
+    videos = Video.objects.all()
+    return render(request, 'video_list.html', {'videos': videos})
 
 def process_form(request):
     if request.method == 'POST':
@@ -51,24 +46,41 @@ def process_form(request):
                 
                 # Check if the file already exists
                 if os.path.exists(file_path):
-                    messages.error(request, 'This video has already been downloaded.', extra_tags='alert-danger')
+                    messages.error(request, 'This video has already been downloaded.')
                     return render(request, 'home.html', {'form': form})
                 
                 # Download video
                 stream.download(output_path=save_path, filename=filename)
 
+                # Download thumbnail
+                thumbnail_url = yt.thumbnail_url
+                response = requests.get(thumbnail_url)
+                if response.status_code == 200:
+                    thumbnail_filename = title + '.jpg'
+                    thumbnail_path = os.path.join(settings.MEDIA_ROOT, 'thumbnails', thumbnail_filename)
+                    with open(thumbnail_path, 'wb') as file:
+                        file.write(response.content)
+                    thumbnail_file = os.path.join('thumbnails', thumbnail_filename)
+                else:
+                    # Use default thumbnail if download fails
+                    thumbnail_file = 'default_image.png'
+                    messages.warning(request, 'Failed to download thumbnail, using default.')
+
                 # Create a new Video instance and save it to the database
                 video = Video(
                     url=url,
                     video_file=os.path.join('videos', filename),
-                    title=title
+                    title=title,
+                    thumbnail=thumbnail_file
                 )
                 try:
                     video.save()
                 except IntegrityError:
                     messages.error(request, 'This video cannot be saved due to a conflict with existing data.')
-                    # Optional: remove the file if it was downloaded but not saved in the database
+                    # Optional: remove the files if they were downloaded but not saved in the database
                     os.remove(file_path)
+                    if thumbnail_file != 'default_image.png':
+                        os.remove(thumbnail_path)
                     return render(request, 'home.html', {'form': form})
 
                 # Redirect to the video list page
@@ -80,9 +92,10 @@ def process_form(request):
         else:
             # If form is not valid
             return render(request, 'home.html', {'form': form})
+    else:
+        # If not POST, redirect to home page
+        return redirect('page_home')
 
-    # If not POST, redirect to home page
-    return redirect('page_home')
 
 
 def show_processing(request):
