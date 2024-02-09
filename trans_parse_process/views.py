@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.shortcuts import render, get_object_or_404
 from pytube import YouTube
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
+from django.utils.translation import gettext as _
 from .models import Video
 from django.contrib import messages
 import requests
@@ -23,6 +26,12 @@ def show_about(request):
 def show_video_list(request):
     videos = Video.objects.all()
     return render(request, 'video_list.html', {'videos': videos})
+
+def delete_video(request, video_id=None, video_slug=None):
+    video = get_object_or_404(Video, pk=video_id)
+    video.delete()
+    messages.add_message(request, messages.INFO, _('Video Deleted'))
+    return HttpResponseRedirect(reverse_lazy('page_video_list'))
 
 def process_form(request):
     if request.method == 'POST':

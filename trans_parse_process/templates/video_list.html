@@ -17,7 +17,14 @@
                 <img src="{{ video.thumbnail.url }}" class="card-img-top rounded" style="height: 200px; object-fit: cover;"> <!-- Adjusted for rounded corners and cover fit -->
                 <div class="card-body">
                     <h5 class="card-title">{{ video.title }}</h5>
-                    <a href="{{ video.url }}" class="btn btn-dark"><i class="bi bi-box-arrow-up-right"></i>&nbsp;{% trans 'Original Video' %}</a>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="{{ video.url }}" target="_blank" class="btn btn-dark"><i class="bi bi-box-arrow-up-right"></i>&nbsp;{% trans 'Original Video' %}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a class="btn btn-danger" href="{% url 'delete_video' video.id %}"><i class="bi bi-trash3-fill"></i>&nbsp;{% trans 'Delete Video' %}</a>
+                        </li>
+                      </ul>                    
                 </div>
             </div>
         </div>
@@ -30,7 +37,7 @@
 {% endif %}
 
 <div class="text-left mt-4 btn-group-lg">
-    <a href="{% url 'page_process_form' %}" class="btn btn-light"><i class="bi bi-plus-square"></i>&nbsp;{% trans 'Upload New Video' %}</a>
+    <a href="{% url 'page_process_form' %}" class="btn btn-dark"><i class="bi bi-plus-square"></i>&nbsp;{% trans 'Upload New Video' %}</a>
 </div>
 
 {% endblock %}
