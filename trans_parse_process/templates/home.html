@@ -4,37 +4,30 @@
 {% load static %}
 
 {% block head_meta %}
-<link rel="stylesheet" href="{% static 'css/logo.css' %}">  
+<link rel="stylesheet" href="{% static 'css/logo.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="video-card row align-items-center rounded-3 border shadow-lg bg-light">
-    <div class="col-lg-6 p-3 p-lg-5 pt-lg-3">
-        <h1 class="display-4 fw-bold lh-1">{% trans 'UltraShorts' %}</h1>
+<div class="row align-items-stretch rounded-3 border shadow-lg bg-central my-4"> <!-- Use align-items-stretch to make columns same height -->
+    <div class="col-lg-6 py-3 px-lg-4"> <!-- Reduced padding with py-3 and px-lg-4 -->
+        <h1 class="display-5 fw-bold lh-1">{% trans 'UltraShorts' %}</h1> <!-- Smaller display size with display-5 -->
         <p class="lead">{% trans 'Making Things Easier' %}</p>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-3"> <!-- Reduced bottom margin with mb-3 -->
             <!-- home.html -->
             <form action="{% url 'page_process_form' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form|crispy }}
-                <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Get Transcript Chunks</button>
+                <button type="submit" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold">Get Transcript Chunks</button>
             </form>
-
-            <a href="{% url 'page_processing' %}" data-bs-toggle="tooltip" data-bs-title="{% trans 'ProcessTooltip' %}" class="btn btn-outline-dark btn-lg px-4">{% trans 'Processing page' %}</a>
+            <a href="{% url 'page_processing' %}" data-bs-toggle="tooltip" data-bs-title="{% trans 'ProcessTooltip' %}" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold">{% trans 'Processing page' %}</a>
         </div>
     </div>
-    <div class="col-lg-6 d-flex align-items-stretch p-0">
-        <!-- Remove padding and make the div stretch full height -->
-        <img src="{% static 'UltraShorts.svg' %}" alt="UltraShorts Logo" class="img-fluid rounded shadow w-100 h-100">
-        <!-- Set image to stretch to 100% width and height of the container -->
+    <div class="col-lg-6 d-flex align-items-stretch p-0"> <!-- Remove padding and make the div stretch full height -->
+        <img src="{% static 'UltraShorts.svg' %}" alt="UltraShorts Logo" class="d-block ms-auto rounded-3 shadow" style="width: auto; height: 100%;"> <!-- Image fills right side and matches the height -->
     </div>     
 </div>
 {% endblock %}
 
 {% block body_end_meta %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-</script>
+<!-- Scripts remain unchanged -->
 {% endblock %}

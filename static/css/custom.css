@@ -3,48 +3,31 @@
 
 /* Or, if you want to change the background color of the content area specifically */
 
-.bg-light {
-    background-color: #CDBCA3;
+.bg-background {
+    background-color: #373737;
 }
 
-.bg-test {
-    color: #003152;
-}
-
-.btn-primary {
+.btn-dark {
     background-color: #1E263D;
     border-color: #0B0C10; /* A slightly darker shade for borders */
 }
 
 .text-body-secondary {
-    color: #000000 !important;
+    color: #DAD5CF !important;
+}
+
+.bg-central {
+    color: #DAD5CF !important;
+
 }
 
 .nav-link, .ultra-shorts-color {
-    color: #008081 !important;
+    color: #DAD5CF !important;
 }
+
 
 .video-card:hover {
     transform: scale(1.03);
-    transition: transform .2s; /* Smooth scaling effect */
-}
-.video-title-overlay {
-    position: absolute;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
-    color: #fff;
-    width: 100%;
-    padding: 10px;
-}
-.custom-btn {
-    background-color: #343a40; /* Darker shade for the button */
-    border: none;
-}
-.custom-btn:hover {
-    background-color: #495057; /* Slightly lighter shade on hover */
+    transition: transform .5s; /* Smooth scaling effect */
 }
 
-/* custom.css */
-
-
-/* Add more customizations as needed *
