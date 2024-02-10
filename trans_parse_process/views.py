@@ -37,7 +37,6 @@ def delete_video(request, video_id=None, video_slug=None):
     # Delete the video file if it exists
     if os.path.isfile(video_file_path):
         os.remove(video_file_path)
-
     # Delete the thumbnail file if it exists and isn't the default image
     if os.path.isfile(thumbnail_path) and 'default_image.png' not in thumbnail_path:
         os.remove(thumbnail_path)
@@ -47,6 +46,16 @@ def delete_video(request, video_id=None, video_slug=None):
     messages.add_message(request, messages.INFO, _('Video Deleted'))
     
     return HttpResponseRedirect(reverse_lazy('page_video_list'))
+
+def confirm_delete_video(request, video_id=None, video_slug=None):
+    video = get_object_or_404(Video, pk=video_id)
+    if request.method == 'POST':
+        # Proceed with deletion if the form is submitted
+        return delete_video(request, video_id=video.id, video_slug=video.slug)
+    else:
+        # Show confirmation page
+        return render(request, 'confirm_delete.html', {'video': video})
+
 
 def process_form(request):
     if request.method == 'POST':
