@@ -154,12 +154,11 @@ def chunk_video(request, video_id):
         for chunk_text in chunks:
             Chunk.objects.create(video=video, text=chunk_text)
         messages.success(request, "Video transcript chunked successfully.")
-    except YouTubeTranscriptApi.CouldNotRetrieveTranscript as e:
-        messages.error(request, f"Failed to retrieve transcript: {e}")
-    except Exception as e:
-        messages.error(request, f"Failed to chunk transcript: {e}")
+    except Exception as e:  # Use a more generic exception handling
+        messages.error(request, f"Failed to chunk transcript: {str(e)}")
     
     return redirect('video_detail', video_id=video.id)
+
 
 
 def get_and_split_transcript_from_api(transcript, chunk_size=8000):
