@@ -17,7 +17,7 @@
             <form action="{% url 'page_process_form' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form|crispy }}
-                <button type="submit" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold">Get Transcript Chunks</button>
+                <button type="submit" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold">{% trans 'Upload Video to List' %}</button>
             </form>
             <a href="{% url 'page_processing' %}" data-bs-toggle="tooltip" data-bs-title="{% trans 'ProcessTooltip' %}" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold">{% trans 'Processing page' %}</a>
         </div>

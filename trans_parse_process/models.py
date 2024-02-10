@@ -10,7 +10,7 @@ class Video(models.Model):
     slug = models.SlugField(unique=True, blank=True)  # Slug field for pretty URLs
 
     def get_absolute_url(self):
-        return reverse('video_detail', kwargs={'slug': self.slug})
+        return reverse('video_detail', kwargs={'video_slug': self.slug})
 
     def save(self, *args, **kwargs):
         if not self.slug:

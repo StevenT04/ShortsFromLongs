@@ -1,11 +1,10 @@
-from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from pytube import YouTube
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.utils.translation import gettext as _
-from .models import Video
+from .models import Video, Chunk
 from django.contrib import messages
 import requests
 from django import forms
@@ -128,6 +127,17 @@ def process_form(request):
     else:
         # If not POST, redirect to home page
         return redirect('page_home')
+    
+def video_detail(request, video_id):
+    video = get_object_or_404(Video, pk=video_id)
+    chunks = video.chunks.all()  # Assuming a related_name='chunks' in the Video model
+    # Additional context as necessary for processing and clips
+    return render(request, 'video_detail.html', {'video': video, 'chunks': chunks})
+
+def chunk_video(request, video_id):
+    # Chunking logic here
+    # Redirect to video_detail
+    return redirect('video_detail', video_id=video_id)
 
 
 

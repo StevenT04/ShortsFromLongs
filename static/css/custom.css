@@ -21,7 +21,11 @@
 
 }
 
-.nav-link, .ultra-shorts-color {
+.card-title {
+    color: #0B0C10;
+}
+
+.nav-link, .ultra-shorts-color{
     color: #DAD5CF !important;
 }
 
