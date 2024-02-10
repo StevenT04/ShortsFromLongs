@@ -6,6 +6,9 @@ from django.conf import settings
 from django.utils.translation import gettext as _
 from .models import Video, Chunk
 from django.contrib import messages
+from youtube_transcript_api import YouTubeTranscriptApi
+from urllib.parse import urlparse, parse_qs
+import time
 import requests
 from django import forms
 import os
@@ -135,9 +138,49 @@ def video_detail(request, video_id):
     return render(request, 'video_detail.html', {'video': video, 'chunks': chunks})
 
 def chunk_video(request, video_id):
-    # Chunking logic here
-    # Redirect to video_detail
-    return redirect('video_detail', video_id=video_id)
+    video = get_object_or_404(Video, pk=video_id)
+    
+    # Check if chunks already exist for this video
+    if video.chunks.exists():
+        messages.info(request, "Transcript for this video has already been chunked.")
+        return redirect('video_detail', video_id=video.id)
+    
+    # Proceed with chunking if no chunks exist
+    try:
+        transcript = YouTubeTranscriptApi.get_transcript(video.url.split('v=')[1])
+        chunks = get_and_split_transcript_from_api(transcript, 8000)
+        
+        # Save chunks to database
+        for chunk_text in chunks:
+            Chunk.objects.create(video=video, text=chunk_text)
+        messages.success(request, "Video transcript chunked successfully.")
+    except YouTubeTranscriptApi.CouldNotRetrieveTranscript as e:
+        messages.error(request, f"Failed to retrieve transcript: {e}")
+    except Exception as e:
+        messages.error(request, f"Failed to chunk transcript: {e}")
+    
+    return redirect('video_detail', video_id=video.id)
+
+
+def get_and_split_transcript_from_api(transcript, chunk_size=8000):
+    chunks, current_chunk, current_chunk_size = [], "", 0
+    for entry in transcript:
+        text = entry['text']
+        start_time = entry['start']
+        timestamp = time.strftime('%H:%M:%S' if start_time >= 3600 else '%M:%S', time.gmtime(start_time))
+        entry_text = f"[{timestamp}] {text}\n"
+        
+        if current_chunk_size + len(entry_text) > chunk_size:
+            chunks.append(current_chunk)
+            current_chunk, current_chunk_size = entry_text, len(entry_text)
+        else:
+            current_chunk += entry_text
+            current_chunk_size += len(entry_text)
+    
+    if current_chunk: 
+        chunks.append(current_chunk)
+    
+    return chunks
 
 
 

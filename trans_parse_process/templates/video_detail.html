@@ -3,8 +3,30 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4 text-body-secondary">
-    <h2>{% trans "Video Detail" %}</h2>
-    <p>{% trans "Placeholder" %}</p>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <div class="video-info mb-4">
+                <h3 class="text-body-secondary">{% trans "Video Title: " %}{{ video.title }}</h3>
+            </div>
+            <!-- Conditionally disable the button if chunks are present -->
+            <form action="{% url 'chunk_video' video.id %}" method="post" class="mb-4">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary" {% if chunks %}disabled{% endif %}>{% trans "Chunk Transcript" %}</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="chunks-container">
+                {% for chunk in chunks %}
+                <!-- Using a button to make chunk text copyable -->
+                <button class="btn btn-light btn-block text-left chunk mb-3 p-3 bg-light border rounded" onclick="copyToClipboard(this)">
+                    <p class="text-body-secondary m-0">{{ chunk.text }}</p>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
