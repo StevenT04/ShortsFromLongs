@@ -29,8 +29,23 @@ def show_video_list(request):
 
 def delete_video(request, video_id=None, video_slug=None):
     video = get_object_or_404(Video, pk=video_id)
+    
+    # Build the path for the video file and thumbnail
+    video_file_path = os.path.join(settings.MEDIA_ROOT, str(video.video_file))
+    thumbnail_path = os.path.join(settings.MEDIA_ROOT, str(video.thumbnail))
+
+    # Delete the video file if it exists
+    if os.path.isfile(video_file_path):
+        os.remove(video_file_path)
+
+    # Delete the thumbnail file if it exists and isn't the default image
+    if os.path.isfile(thumbnail_path) and 'default_image.png' not in thumbnail_path:
+        os.remove(thumbnail_path)
+
+    # Now, delete the video object
     video.delete()
     messages.add_message(request, messages.INFO, _('Video Deleted'))
+    
     return HttpResponseRedirect(reverse_lazy('page_video_list'))
 
 def process_form(request):
