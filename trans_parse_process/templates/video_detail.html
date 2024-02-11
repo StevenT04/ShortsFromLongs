@@ -5,15 +5,20 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row">
-        <div class="col-12 mb-3">
-            <div class="video-info mb-4">
-                <h3 class="text-body-secondary">{% trans "Video Title: " %}{{ video.title }}</h3>
+        <div class="col-lg-12 mb-4">
+            <!-- Video Information with Enhanced Styling -->
+            <div class="video-info bg-dark-blue text-light p-4 rounded-3 shadow">
+                <h3 class="mb-3">{{ video.title }}</h3>
             </div>
+
             {% if not video.chunks.exists %}
+            <!-- Chunking Action Button with Custom Styling -->
+            <div class="mt-4">
                 <form action="{% url 'chunk_video' video.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-primary mb-3">{% trans "Chunk Transcript" %}</button>
+                    <button type="submit" class="btn btn-custom-blue text-light mb-3">Chunk Transcript</button>
                 </form>
+            </div>
             {% endif %}
         </div>
     </div>

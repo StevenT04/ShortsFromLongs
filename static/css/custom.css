@@ -4,7 +4,7 @@
 /* Or, if you want to change the background color of the content area specifically */
 
 .bg-background {
-    background-color: #122838;
+    background-color: #445566;
 }
 
 .btn-dark {
@@ -26,7 +26,32 @@
     transition: transform .5s; /* Smooth scaling effect */
 }
 
-/* STYLINGS UNDERNEATH ARE FROM CHATGPT FOR video_detail.html */
+/* STYLINGS UNDERNEATH ARE FOR VIDEO_LIST*/
+
+.btn-custom-beige {
+    background-color: #d2b48c; /* Beige color */
+    color: #3E2723; /* Dark text for contrast */
+}
+.btn-custom-beige:hover {
+    background-color: #e4cda7; /* Lighter beige on hover */
+}
+
+.btn-custom-list {
+    background-color: #293A48; /* Custom blue */
+    color: #fff; /* Light text for contrast */
+}
+.btn-custom-list:hover {
+    background-color: #314658; /* Lighter blue on hover */
+    color: #fff
+}
+
+.btn-custom-delete{
+    background-color: darkred;
+    color: #F5F5F5;
+}
+
+
+/* STYLINGS UNDERNEATH ARE FOR video_detail.html */
 
 /* Custom fade class for the copy confirmation */
 #copyConfirmation {
@@ -43,6 +68,8 @@
     background-color: #272123; /* Dark background */
     color: #DAD5CF; /* Light text */
 }
+
+/* STYLES BELOW ARE FOR CHUNKING */
 
 .dark-theme .dark-list-group .dark-list-item {
     background-color: #383432; /* Darker background for list items */
@@ -62,4 +89,36 @@
     color: #DAD5CF !important; /* Light grey text for less important items */
 }
 
-  
+/*STYLE BELOW ARE FOR TITLE OF VIDEO_DETAILS PAGE*/
+
+
+.bg-dark-blue {
+    background-color: #1F2F45; /* Example dark blue */
+    border: 2px solid #2f486a;
+}
+
+.text-light {
+    color: #F5F5F5; /* Light text for contrast */
+}
+
+.btn-custom-blue {
+    background-color: #293A48; /* Custom blue */
+    color: #F5F5F5;
+    border: none;
+}
+
+.btn-custom-blue:hover {
+    background-color: #1565C0; /* A lighter shade of blue for hover effect */
+}
+
+.video-info {
+    background-color: #272123; /* A shade of brown */
+    border: 2px solid #4E342E; /* Slightly darker brown for border */
+}
+
+
+button {
+    width: auto; /* Adjust based on content size */
+    padding: 0.375rem 0.75rem; /* Bootstrap's default padding for buttons */
+}
+
