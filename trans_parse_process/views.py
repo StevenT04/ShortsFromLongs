@@ -139,7 +139,6 @@ def video_detail(request, video_id):
 
 def chunk_video(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
-    
     # Check if chunks already exist for this video
     if video.chunks.exists():
         messages.info(request, "Transcript for this video has already been chunked.")
@@ -147,41 +146,40 @@ def chunk_video(request, video_id):
     
     # Proceed with chunking if no chunks exist
     try:
-        transcript = YouTubeTranscriptApi.get_transcript(video.url.split('v=')[1])
-        chunks = get_and_split_transcript_from_api(transcript, 8000)
+        video_id = parse_qs(urlparse(video.url).query).get('v', [None])[0]
+        if not video_id:
+            raise Exception("Invalid YouTube URL.")
+        transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        chunks = get_and_split_transcript(transcript, 8000)
         
         # Save chunks to database
         for chunk_text in chunks:
             Chunk.objects.create(video=video, text=chunk_text)
         messages.success(request, "Video transcript chunked successfully.")
-    except Exception as e:  # Use a more generic exception handling
-        messages.error(request, f"Failed to chunk transcript: {str(e)}")
+    except Exception as e:
+        messages.error(request, f"Failed to chunk transcript: {e}")
     
     return redirect('video_detail', video_id=video.id)
 
-
-
-def get_and_split_transcript_from_api(transcript, chunk_size=8000):
+def get_and_split_transcript(transcript, chunk_size):
     chunks, current_chunk, current_chunk_size = [], "", 0
-    for entry in transcript:
-        text = entry['text']
-        start_time = entry['start']
-        timestamp = time.strftime('%H:%M:%S' if start_time >= 3600 else '%M:%S', time.gmtime(start_time))
-        entry_text = f"[{timestamp}] {text}\n"
+    for i in range(0, len(transcript), 3):  # Process every 3rd entry
+        texts = [transcript[j]['text'] for j in range(i, min(i+3, len(transcript)))]
+        timestamp = time.strftime('%H:%M:%S' if transcript[i]['start'] >= 3600 else '%M:%S', time.gmtime(transcript[i]['start']))
+        entry = f"[{timestamp}] {' '.join(texts)}\n"
         
-        if current_chunk_size + len(entry_text) > chunk_size:
+        # Add to current chunk or start new chunk based on size
+        if current_chunk_size + len(entry) > chunk_size:
             chunks.append(current_chunk)
-            current_chunk, current_chunk_size = entry_text, len(entry_text)
+            current_chunk, current_chunk_size = entry, len(entry)
         else:
-            current_chunk += entry_text
-            current_chunk_size += len(entry_text)
-    
-    if current_chunk: 
+            current_chunk += entry
+            current_chunk_size += len(entry)
+            
+    if current_chunk:  # Add the last chunk if it exists
         chunks.append(current_chunk)
     
     return chunks
-
-
 
 def show_processing(request):
     return HttpResponse("No Processing page yet")
