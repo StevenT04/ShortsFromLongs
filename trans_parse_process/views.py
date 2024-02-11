@@ -141,16 +141,16 @@ def chunk_video(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
     # Check if chunks already exist for this video
     if video.chunks.exists():
-        messages.info(request, "Transcript for this video has already been chunked.")
-        return redirect('video_detail', video_id=video.id)
-    
-    # Proceed with chunking if no chunks exist
+        video.chunks.all().delete()
+        messages.info(request, "Existing Chunks Deleted, Re-Chunked now.")
+        
+
     try:
         video_id = parse_qs(urlparse(video.url).query).get('v', [None])[0]
         if not video_id:
             raise Exception("Invalid YouTube URL.")
         transcript = YouTubeTranscriptApi.get_transcript(video_id)
-        chunks = get_and_split_transcript(transcript, video.title, 8000)
+        chunks = get_and_split_transcript(transcript, video.title, 17000)
         
         # Save chunks to database
         for chunk_text in chunks:
@@ -165,9 +165,9 @@ def chunk_video(request, video_id):
 
 def get_and_split_transcript(transcript, video_title, chunk_size):
     prompt_template = (
-        "I want you to only answer in English. Your goal is to extract key takeaways of the next chunk of the transcript. "
-        "Takeaways must be concise, informative, and easy to read & understand.\n"
-        "Each key takeaway should be a list item, of the following format:\n\n"
+        "I want you to only answer in English. Your goal is to extract interesting key takeaways of the next chunk of the transcript. "
+        "Takeaways MUST be 1-2 MINUTES IN LENGTH, CONCISE, INTERESTING, INFORMATIVE, and EASY to READ and UNDERSTAND.\n"
+        "Each key takeaway must be a list item, of the following format:\n\n"
         "- [Timestamp Duration] [Takeaway emoji] [Key takeaway in English]\n\n"
         "The timestamp should be presented in a duration format. The first set of timestamps should be the start time of the Key Takeaway, "
         "and the second set of timestamps, after the hyphen, should be the end time of the Key Takeaway, for example:\n"
