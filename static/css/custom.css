@@ -4,7 +4,7 @@
 /* Or, if you want to change the background color of the content area specifically */
 
 .bg-background {
-    background-color: #373737;
+    background-color: #122838;
 }
 
 .btn-dark {
@@ -12,20 +12,11 @@
     border-color: #0B0C10; /* A slightly darker shade for borders */
 }
 
-.text-body-secondary {
-    color: #DAD5CF !important;
-}
-
-.bg-central {
-    color: #DAD5CF !important;
-
-}
-
 .card-title {
     color: #0B0C10;
 }
 
-.nav-link, .ultra-shorts-color{
+.nav-link, .ultra-shorts-color, .text-body-secondary, .bg-central{
     color: #DAD5CF !important;
 }
 
@@ -47,4 +38,28 @@
     z-index: 1050;
     transition: opacity 0.5s ease-in-out; /* This should match the timing in your JavaScript */
   }
+
+  .dark-theme .dark-container {
+    background-color: #272123; /* Dark background */
+    color: #DAD5CF; /* Light text */
+}
+
+.dark-theme .dark-list-group .dark-list-item {
+    background-color: #383432; /* Darker background for list items */
+    color: #DAD5CF; /* Lighter text */
+    border: 1px solid #444; /* Subtle borders for list items */
+}
+
+.dark-theme .dark-list-group .dark-list-item:hover {
+    background-color: #444; /* Slightly lighter background on hover */
+}
+
+.dark-theme .text-light {
+    color: #DAD5CF !important; /* Ensure text is light */
+}
+
+.dark-theme .text-secondary {
+    color: #DAD5CF !important; /* Light grey text for less important items */
+}
+
   

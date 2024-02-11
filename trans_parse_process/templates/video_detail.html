@@ -17,14 +17,30 @@
             {% endif %}
         </div>
     </div>
-    <div class="row">
-        <div class="col-3">
-            <div class="chunks-container shadow-lg d-flex flex-column justify-content-between rounded">
-                {% for chunk in chunks %}
-                <button class="btn btn-sm btn-outline-dark btn-block text-left chunk mb-3 p-3 border rounded video-card" data-chunk-text="{{ chunk.text|escapejs }}" onclick="copyToClipboard(this.getAttribute('data-chunk-text'))">
-                    <p class="text-body-secondary m-0">{% trans "Copy Chunk " %}{{ forloop.counter }}</p>
-                </button>
-                {% endfor %}
+    <div class="container mt-4 dark-theme">
+        <div class="row">
+            <div class="col-lg-3">
+                <!-- Enhanced Chunks Container on the Left with Dark Theme -->
+                <div class="chunks-container shadow p-4 rounded-3 video-card dark-container">
+                    <h4 class="text-center mb-4 text-light">Video Chunks</h4>
+                    <div class="list-group dark-list-group">
+                        {% for chunk in chunks %}
+                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-2 dark-list-item" onclick="copyToClipboard('{{ chunk.text|escapejs }}'); return false;">
+                            <span class="text-light">Chunk {{ forloop.counter }}</span>
+                            <small class="text-secondary">Copy</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dynamic Content or Placeholder -->
+            <div class="col-lg-9">
+                <!-- Example content or future functionality can be placed here -->
+                <div class="placeholder-content">
+                    <!-- Placeholder for visual balance and demonstration -->
+                    <h4 class="text-muted text-center my-5 text-body-secondary">Additional Content Goes Here</h4>
+                </div>
             </div>
         </div>
     </div>
