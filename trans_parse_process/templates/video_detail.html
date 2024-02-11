@@ -12,22 +12,27 @@
             {% if not video.chunks.exists %}
                 <form action="{% url 'chunk_video' video.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-primary mb-3">Chunk Transcript</button>
+                    <button type="submit" class="btn btn-primary mb-3">{% trans "Chunk Transcript" %}</button>
                 </form>
-            {% endif %}        
+            {% endif %}
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
+        <div class="col-3">
             <div class="chunks-container">
                 {% for chunk in chunks %}
-                <!-- Simplify button text and add a data attribute for the chunk text -->
-                <button class="btn btn-light btn-block text-left chunk mb-3 p-3 bg-light border rounded">
-                    <p class="m-0">{% trans "Copy Chunk " %}{{ forloop.counter }}</p>
-                </button>                
+                <button class="btn btn-outline-dark btn-block text-left chunk mb-3 p-3 border rounded" data-chunk-text="{{ chunk.text|escapejs }}" onclick="copyToClipboard(this.getAttribute('data-chunk-text'))">
+                    <p class="text-body-secondary m-0">{% trans "Copy Chunk " %}{{ forloop.counter }}</p>
+                </button>
                 {% endfor %}
             </div>
         </div>
     </div>
 </div>
+
+<!-- Temporary message container for copy confirmation -->
+<div id="copyConfirmation" style="display: none; position: fixed; bottom: 20px; right: 20px; background-color: #28a745; color: white; padding: 10px; border-radius: 5px; z-index: 1000;">
+    {% trans "Text Copied!" %}
+</div>
+
 {% endblock %}
