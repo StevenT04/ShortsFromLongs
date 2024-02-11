@@ -22,7 +22,7 @@
             <div class="chunks-container">
                 {% for chunk in chunks %}
                 <!-- Simplify button text and add a data attribute for the chunk text -->
-                <button class="btn btn-light btn-block text-left chunk mb-3 p-3 bg-light border rounded" onclick="copyToClipboard('{{ chunk.id }}')" data-chunk-text="{{ chunk.text|escapejs }}">
+                <button class="btn btn-light btn-block text-left chunk mb-3 p-3 bg-light border rounded">
                     <p class="m-0">{% trans "Copy Chunk " %}{{ forloop.counter }}</p>
                 </button>                
                 {% endfor %}

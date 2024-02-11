@@ -22,11 +22,6 @@
       {% endfor %}
     {% endif %}
 
-    {% block javascript %}
-        <script src="{% static 'path/to/your/scripts.js' %}"></script>
-    {% endblock %}
-
-
     <h1 class="text-body-emphasis">{% block page_title %}{% endblock %}</h1>
     {% block content %}
     {% endblock %}
