@@ -35,3 +35,44 @@
     transition: transform .5s; /* Smooth scaling effect */
 }
 
+/* STYLINGS UNDERNEATH ARE FROM CHATGPT FOR video_detail.html */
+/* Custom card styles */
+.custom-card {
+    background: #333; /* Dark background for the card */
+    border: none;
+    color: white; /* White text color for contrast */
+  }
+  
+  .custom-card-header {
+    background: #222; /* Slightly darker background for the header */
+    border-bottom: 1px solid #444; /* Add a subtle border */
+  }
+  
+  .custom-list-group-item {
+    background: transparent; /* Make list group background transparent */
+    border: none; /* Remove borders */
+  }
+  
+  .custom-btn {
+    color: white; /* White text for buttons */
+    border: 1px solid #555; /* Subtle border for buttons */
+    background: transparent; /* Transparent background for a 'cooler' look */
+  }
+  
+  .custom-btn:hover {
+    background: #444; /* Dark background for button hover state */
+  }
+  
+  /* Custom copy confirmation message styles */
+  .copy-confirmation {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000;
+  }
+  
