@@ -5,41 +5,33 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row">
-        <!-- Chunks Container in a New Card Design -->
-        <div class="col-md-3 mb-3">
-            <div class="card video-card custom-card">
-                <div class="card-header custom-card-header">
-                    {% trans "Chunks" %}
-                </div>
-                <ul class="list-group list-group-flush">
-                    {% for chunk in chunks %}
-                    <li class="list-group-item custom-list-group-item">
-                        <button class="btn custom-btn w-100 text-left" data-chunk-text="{{ chunk.text|escapejs }}" onclick="copyToClipboard(this.getAttribute('data-chunk-text'))">
-                            {% trans "Copy Chunk " %}{{ forloop.counter }}
-                        </button>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        
-        <!-- Video Info and Actions -->
-        <div class="col-md-9">
+        <div class="col-12 mb-3">
             <div class="video-info mb-4">
-                <h2 class="text-body-secondary">{% trans "Video Title: " %}{{ video.title }}</h2>
-                {% if not video.chunks.exists %}
-                    <form action="{% url 'chunk_video' video.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">{% trans "Chunk Transcript" %}</button>
-                    </form>
-                {% endif %}
+                <h3 class="text-body-secondary">{% trans "Video Title: " %}{{ video.title }}</h3>
+            </div>
+            {% if not video.chunks.exists %}
+                <form action="{% url 'chunk_video' video.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary mb-3">{% trans "Chunk Transcript" %}</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="chunks-container">
+                {% for chunk in chunks %}
+                <button class="btn btn-outline-dark btn-block text-left chunk mb-3 p-3 border rounded" data-chunk-text="{{ chunk.text|escapejs }}" onclick="copyToClipboard(this.getAttribute('data-chunk-text'))">
+                    <p class="text-body-secondary m-0">{% trans "Copy Chunk " %}{{ forloop.counter }}</p>
+                </button>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
-<!-- Temporary message container for copy confirmation -->
-<div id="copyConfirmation" class="copy-confirmation">
+<!-- Redesigned message container for copy confirmation -->
+<div id="copyConfirmation" class="alert alert-success" role="alert" style="display: none; position: fixed; top: 225px; left: 31%; transform: translateX(-50%); z-index: 1050;">
     {% trans "Text Copied!" %}
 </div>
 
