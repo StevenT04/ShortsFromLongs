@@ -14,8 +14,6 @@
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary mb-3">Chunk Transcript</button>
                 </form>
-            {% else %}
-                <p>{% trans "Transcript has already been chunked." %}</p>
             {% endif %}        
         </div>
     </div>
@@ -23,10 +21,10 @@
         <div class="col-12">
             <div class="chunks-container">
                 {% for chunk in chunks %}
-                <!-- Using a button to make chunk text copyable -->
-                <button class="btn btn-light btn-block text-left chunk mb-3 p-3 bg-light border rounded" onclick="navigator.clipboard.writeText('{{ chunk.text }}')">
-                    <p class="text-body-secondary m-0">{{ chunk.text }}</p>
-                </button>
+                <!-- Simplify button text and add a data attribute for the chunk text -->
+                <button class="btn btn-light btn-block text-left chunk mb-3 p-3 bg-light border rounded" onclick="copyToClipboard('{{ chunk.id }}')" data-chunk-text="{{ chunk.text|escapejs }}">
+                    <p class="m-0">{% trans "Copy Chunk " %}{{ forloop.counter }}</p>
+                </button>                
                 {% endfor %}
             </div>
         </div>
