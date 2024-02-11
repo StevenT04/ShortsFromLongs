@@ -16,7 +16,7 @@
         {% for video in videos %}
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-lg video-card bg-dark-blue rounded-3"> <!-- Apply dark theme for the card -->
-                <img src="{{ video.thumbnail.url }}" loading="lazy" class="card-img-top rounded-3" alt="Video thumbnail" style="height: 200px; object-fit: cover;">
+                <img src="{{ video.thumbnail.url }}" loading="lazy" class="card-img-top rounded" alt="Video thumbnail" style="height: 200px; object-fit: cover;">
                 <div class="card-body d-flex flex-column justify-content-between">
                     <h5 class="card-title text-body-secondary">{{ video.title }}</h5>
                     <div>
