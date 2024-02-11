@@ -49,6 +49,10 @@
     background-color: darkred;
     color: #F5F5F5;
 }
+.btn-custom-delete:hover{
+    background-color: rgb(172, 10, 10);
+    color: #F5F5F5;
+}
 
 
 /* STYLINGS UNDERNEATH ARE FOR video_detail.html */
