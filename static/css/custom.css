@@ -45,6 +45,6 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 1050;
-    transition: opacity 0.15s ease-in-out; /* This should match the timing in your JavaScript */
+    transition: opacity 0.5s ease-in-out; /* This should match the timing in your JavaScript */
   }
   

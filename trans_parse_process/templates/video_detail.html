@@ -19,9 +19,9 @@
     </div>
     <div class="row">
         <div class="col-3">
-            <div class="chunks-container">
+            <div class="chunks-container shadow-lg d-flex flex-column justify-content-between rounded">
                 {% for chunk in chunks %}
-                <button class="btn btn-outline-dark btn-block text-left chunk mb-3 p-3 border rounded" data-chunk-text="{{ chunk.text|escapejs }}" onclick="copyToClipboard(this.getAttribute('data-chunk-text'))">
+                <button class="btn btn-sm btn-outline-dark btn-block text-left chunk mb-3 p-3 border rounded video-card" data-chunk-text="{{ chunk.text|escapejs }}" onclick="copyToClipboard(this.getAttribute('data-chunk-text'))">
                     <p class="text-body-secondary m-0">{% trans "Copy Chunk " %}{{ forloop.counter }}</p>
                 </button>
                 {% endfor %}
@@ -31,7 +31,7 @@
 </div>
 
 <!-- Redesigned message container for copy confirmation -->
-<div id="copyConfirmation" class="alert alert-success" role="alert" style="display: none; position: fixed; top: 225px; left: 31%; transform: translateX(-50%); z-index: 1050;">
+<div id="copyConfirmation" class="alert alert-success" role="alert" style="display: none; position: fixed; top: 223px; left: 31%; transform: translateX(-50%); z-index: 1050;">
     {% trans "Text Copied!" %}
 </div>
 
