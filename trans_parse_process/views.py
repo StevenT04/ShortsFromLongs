@@ -150,7 +150,7 @@ def chunk_video(request, video_id):
         if not video_id:
             raise Exception("Invalid YouTube URL.")
         transcript = YouTubeTranscriptApi.get_transcript(video_id)
-        chunks = get_and_split_transcript(transcript, 8000)
+        chunks = get_and_split_transcript(transcript, video.title, 8000)
         
         # Save chunks to database
         for chunk_text in chunks:
@@ -161,25 +161,48 @@ def chunk_video(request, video_id):
     
     return redirect('video_detail', video_id=video.id)
 
-def get_and_split_transcript(transcript, chunk_size):
+# ...
+
+def get_and_split_transcript(transcript, video_title, chunk_size):
+    prompt_template = (
+        "I want you to only answer in English. Your goal is to extract key takeaways of the next chunk of the transcript. "
+        "Takeaways must be concise, informative, and easy to read & understand.\n"
+        "Each key takeaway should be a list item, of the following format:\n\n"
+        "- [Timestamp Duration] [Takeaway emoji] [Key takeaway in English]\n\n"
+        "The timestamp should be presented in a duration format. The first set of timestamps should be the start time of the Key Takeaway, "
+        "and the second set of timestamps, after the hyphen, should be the end time of the Key Takeaway, for example:\n"
+        "- [xx:xx - xx:xx]\n"
+        "- [xx:xx:xxx - yy:yy:yy]\n\n"
+        "Keep emoji relevant and unique to each Key Takeaway item. Do not use the same emoji for every takeaway. Render the brackets. "
+        "Do not prepend takeaway with \"Key takeaway\".\n\n"
+        f"[VIDEO TITLE]: {video_title}\n\n"
+        "[VIDEO TRANSCRIPT CHUNK]:\n\n"
+    )
+    
     chunks, current_chunk, current_chunk_size = [], "", 0
-    for i in range(0, len(transcript), 3):  # Process every 3rd entry
-        texts = [transcript[j]['text'] for j in range(i, min(i+3, len(transcript)))]
+
+    for i in range(0, len(transcript), 5):  # Process every 5th entry
+        texts = ' '.join(transcript[j]['text'] for j in range(i, min(i+5, len(transcript))))
         timestamp = time.strftime('%H:%M:%S' if transcript[i]['start'] >= 3600 else '%M:%S', time.gmtime(transcript[i]['start']))
-        entry = f"[{timestamp}] {' '.join(texts)}\n"
+        entry = f"[{timestamp}] {texts}\n"
         
-        # Add to current chunk or start new chunk based on size
+        # Initialize the first chunk with prompt + first entry or append entry to current chunk
+        if not chunks and not current_chunk:  # Initialize the first chunk with prompt
+            current_chunk = prompt_template
         if current_chunk_size + len(entry) > chunk_size:
             chunks.append(current_chunk)
-            current_chunk, current_chunk_size = entry, len(entry)
+            current_chunk = prompt_template + entry
+            current_chunk_size = len(current_chunk)
         else:
             current_chunk += entry
             current_chunk_size += len(entry)
-            
-    if current_chunk:  # Add the last chunk if it exists
+
+    if current_chunk.strip() not in [prompt_template.strip(), ""]:  # Ensure not to add empty or only prompt chunks
         chunks.append(current_chunk)
-    
+
     return chunks
+
+
 
 def show_processing(request):
     return HttpResponse("No Processing page yet")
