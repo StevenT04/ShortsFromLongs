@@ -37,7 +37,7 @@ class ShortClip(models.Model):
     start_time = models.DurationField()
     end_time = models.DurationField()
     clip_file = models.FileField(upload_to='clips/')
-    title = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
 
     def get_absolute_url(self):

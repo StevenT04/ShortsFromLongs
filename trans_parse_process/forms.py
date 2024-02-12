@@ -17,4 +17,7 @@ class ChunkingForm(forms.Form):
 
 
 class ProcessingForm(forms.Form):
-    timestamps = forms.CharField(widget=forms.Textarea, label='Formatted Timestamps')
+    chatgpt_output = forms.CharField(
+        widget=forms.Textarea(attrs={'placeholder': 'Paste ChatGPT output here'}),
+        label='ChatGPT Output'
+    )

@@ -4,7 +4,10 @@ from pytube import YouTube
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.utils.translation import gettext as _
-from .models import Video, Chunk
+from .models import Video, Chunk, ShortClip
+import re
+from datetime import timedelta
+import ffmpeg
 from django.contrib import messages
 from youtube_transcript_api import YouTubeTranscriptApi
 from urllib.parse import urlparse, parse_qs
@@ -174,6 +177,7 @@ def get_and_split_transcript(transcript, video_title, chunk_size):
         "- [xx:xx - xx:xx]\n"
         "- [xx:xx:xxx - yy:yy:yy]\n\n"
         "Keep emoji relevant and unique to each Key Takeaway item. Do not use the same emoji for every takeaway. Render the brackets. "
+        "There should be no bulletpoints for each takeaway. Simply list them as a continuous list."
         "Do not prepend takeaway with \"Key takeaway\".\n\n"
         f"[VIDEO TITLE]: {video_title}\n\n"
         "[VIDEO TRANSCRIPT CHUNK]:\n\n"
