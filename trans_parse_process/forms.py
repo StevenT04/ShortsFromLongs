@@ -18,5 +18,18 @@ class ChunkingForm(forms.Form):
 
 class ProcessingForm(forms.Form):
     chatgpt_output = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Paste ChatGPT output here'}),
-        label='ChatGPT Output'
-    )
+                                     label='ChatGPT Output')
+
+    def clean_chatgpt_output(self):
+        data = self.cleaned_data['chatgpt_output']
+        # Define the regular expression pattern for validation
+        pattern = re.compile(r'^\[\d{2}:\d{2} - \d{2}:\d{2}\] .+$', re.MULTILINE)
+
+        # Split the input into lines and validate each line
+        lines = data.splitlines()
+        for line in lines:
+            if not pattern.match(line):
+                raise forms.ValidationError('Invalid format detected. Please ensure all lines follow the correct format: "[MM:SS - MM:SS] Description."')
+
+        # Return the cleaned data
+        return data

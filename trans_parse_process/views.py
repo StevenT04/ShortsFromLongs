@@ -249,7 +249,7 @@ def process_clips_form(request, video_id):
     else:
         form = ProcessingForm()
 
-    return render(request, 'video_details.html', {'form': form, 'video': video})
+    return render(request, 'video_detail.html', {'form': form, 'video': video})
 
 
 

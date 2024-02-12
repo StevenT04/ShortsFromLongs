@@ -50,12 +50,12 @@
             </div>
             
             <!-- Dynamic Content or Placeholder -->
-            <div class="col-lg-9">
+            <div class="col-lg-9 d-grid gap-2 d-md-flex justify-content-md-start mb-3">
                 <!-- video_details.html -->
                 <form action="{% url 'process_clips_form' video.id %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ form|crispy }}
-                    <button type="submit" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold">{% trans 'Upload Video to List' %}</button>
+                    <button type="submit" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold">{% trans 'Create Clip Templates' %}</button>
                 </form>
 
             </div>
