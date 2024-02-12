@@ -15,7 +15,7 @@ import time
 import requests
 from django import forms
 import os
-from .forms import ChunkingForm, ProcessingForm  # Assume you have created these forms
+from .forms import ChunkingForm, ProcessingForm 
 from django.db.utils import IntegrityError
 
 
@@ -137,8 +137,9 @@ def process_form(request):
 def video_detail(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
     chunks = video.chunks.all()  # Assuming a related_name='chunks' in the Video model
+    form = ProcessingForm()
     # Additional context as necessary for processing and clips
-    return render(request, 'video_detail.html', {'video': video, 'chunks': chunks})
+    return render(request, 'video_detail.html', {'video': video, 'chunks': chunks, 'form': form})
 
 def chunk_video(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
@@ -205,6 +206,51 @@ def get_and_split_transcript(transcript, video_title, chunk_size):
         chunks.append(current_chunk)
 
     return chunks
+
+def parse_duration(time_str):
+    parts = time_str.split(':')
+    if len(parts) == 3:
+        hours, minutes, seconds = map(int, parts)
+    elif len(parts) == 2:
+        hours = 0
+        minutes, seconds = map(int, parts)
+    else:
+        raise ValueError("Invalid timestamp format")
+    return timedelta(hours=hours, minutes=minutes, seconds=seconds)
+
+
+def process_clips_form(request, video_id):
+    video = get_object_or_404(Video, pk=video_id)
+    
+    if video.clips.exists():
+        video.clips.all().delete()
+        messages.info(request, "Existing Clips from models Deleted, Re-Processed now.")
+    
+    if request.method == 'POST':
+        form = ProcessingForm(request.POST)
+        if form.is_valid():
+            chatgpt_output = form.cleaned_data['chatgpt_output']
+            pattern = r'\[(\d{1,2}:\d{2}:\d{2})-(\d{1,2}:\d{2}:\d{2})\] (.+)'
+            matches = re.findall(pattern, chatgpt_output, re.MULTILINE)
+
+            for start, end, description in matches:
+                start_time = parse_duration(start)
+                end_time = parse_duration(end)
+
+                ShortClip.objects.create(
+                    video=video,
+                    start_time=start_time,
+                    end_time=end_time,
+                    description=description,
+                    clip_file=None  # Placeholder for clip_file handling
+                )
+
+            return redirect('video_detail', video_id=video.id)
+    else:
+        form = ProcessingForm()
+
+    return render(request, 'video_details.html', {'form': form, 'video': video})
+
 
 
 

@@ -23,7 +23,7 @@
 
 .video-card:hover {
     transform: scale(1.03);
-    transition: transform .5s; /* Smooth scaling effect */
+    transition: transform .2s; /* Smooth scaling effect */
 }
 
 /* STYLINGS UNDERNEATH ARE FOR VIDEO_LIST*/

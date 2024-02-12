@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+{% load crispy_forms_tags %}
+
 
 {% block content %}
 <div class="container mt-5">
@@ -49,11 +51,13 @@
             
             <!-- Dynamic Content or Placeholder -->
             <div class="col-lg-9">
-                <!-- Example content or future functionality can be placed here -->
-                <div class="placeholder-content">
-                    <!-- Placeholder for visual balance and demonstration -->
-                    <h4 class="text-muted text-center my-5 text-body-secondary">Additional Content Goes Here</h4>
-                </div>
+                <!-- video_details.html -->
+                <form action="{% url 'process_clips_form' video.id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold">{% trans 'Upload Video to List' %}</button>
+                </form>
+
             </div>
         </div>
     </div>
