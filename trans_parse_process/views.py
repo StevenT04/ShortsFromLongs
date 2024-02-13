@@ -254,7 +254,13 @@ def process_clips_form(request, video_id):
 
 
 def show_processing(request, video_id):
-    video = get_object_or_404(Video, pk=video_id)
+    
+    if not Chunk.objects.filter(video_id=video_id).exists():
+        messages.error(request, "Please load chunks for this video.")
+        return redirect('video_detail', video_id=video_id)
+    else:
+        video = get_object_or_404(Video, pk=video_id)
     return render(request, 'processing_page.html', {'video': video})
+    
 
 
