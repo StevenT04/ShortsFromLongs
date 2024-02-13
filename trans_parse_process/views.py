@@ -245,7 +245,8 @@ def process_clips_form(request, video_id):
                     clip_file=None  # Placeholder for clip_file handling
                 )
 
-            return redirect('video_detail', video_id=video.id)
+        return redirect('video_detail', video_id=video.id)
+
     else:
         form = ProcessingForm()
 
