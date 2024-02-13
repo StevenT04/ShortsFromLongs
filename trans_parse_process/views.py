@@ -139,7 +139,7 @@ def video_detail(request, video_id):
     chunks = video.chunks.all()  # Assuming a related_name='chunks' in the Video model
     form = ProcessingForm()
     # Additional context as necessary for processing and clips
-    return render(request, 'video_detail.html', {'video': video, 'chunks': chunks, 'form': form})
+    return render(request, 'video_detail.html', {'video': video, 'chunks': chunks})
 
 def chunk_video(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
@@ -260,7 +260,9 @@ def show_processing(request, video_id):
         return redirect('video_detail', video_id=video_id)
     else:
         video = get_object_or_404(Video, pk=video_id)
-    return render(request, 'processing_page.html', {'video': video})
+        chunks = video.chunks.all()  # Assuming a related_name='chunks' in the Video model
+        form = ProcessingForm()
+    return render(request, 'processing_page.html', {'video': video, 'chunks': chunks, 'form': form})
     
 
 

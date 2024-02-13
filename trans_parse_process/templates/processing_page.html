@@ -5,20 +5,34 @@
 
 
 {% block content %}
-<div class="col-lg-3">
-    <!-- Enhanced Chunks Container on the Left with Dark Theme -->
-    <div class="chunks-container shadow p-4 rounded-3 dark-container">
-        <h4 class="text-center mb-4 text-light">Video Chunks</h4>
-        <div class="list-group dark-list-group">
-            {% for chunk in chunks %}
-            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-2 dark-list-item video-card rounded-2" onclick="copyToClipboard('{{ chunk.text|escapejs }}'); return false;">
-                <span class="text-light">Chunk {{ forloop.counter }}</span>
-                <small class="text-secondary">Copy</small>
-            </a>
-            {% endfor %}
+<div class="container mt-4 dark-theme">
+    <div class="row">
+        <div class="col-lg-3">
+            <!-- Enhanced Chunks Container on the Left with Dark Theme -->
+            <div class="chunks-container shadow p-4 rounded-3 dark-container">
+                <h4 class="text-center mb-4 text-light">Video Chunks</h4>
+                <div class="list-group dark-list-group">
+                    {% for chunk in chunks %}
+                    <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-2 dark-list-item video-card rounded-2" onclick="copyToClipboard('{{ chunk.text|escapejs }}'); return false;">
+                        <span class="text-light">Chunk {{ forloop.counter }}</span>
+                        <small class="text-secondary">Copy</small>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 d-grid gap-2 d-md-flex justify-content-md-start mb-3 bg-central">
+            <!-- video_details.html -->
+            <form action="{% url 'process_clips_form' video.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold">{% trans 'Create Clip Templates' %}</button>
+            </form>
+    
         </div>
     </div>
 </div>
+
 
 <div id="copyConfirmation" class="alert alert-success" role="alert" style="display: none; position: fixed; top: 30px; left: 22%; transform: translateX(-50%); z-index: 1050;">
     {% trans "Text Copied!" %}
