@@ -253,9 +253,8 @@ def process_clips_form(request, video_id):
     return render(request, 'video_detail.html', {'form': form, 'video': video})
 
 
-
-
-def show_processing(request):
-    return HttpResponse("No Processing page yet")
+def show_processing(request, video_id):
+    video = get_object_or_404(Video, pk=video_id)
+    return render(request, 'processing_page.html', {'video': video})
 
 
