@@ -11,12 +11,17 @@
 {% block content %}
 {% if videos %}
 
+<!-- Repeat this structure for each video topic -->
 <div class="container mt-4">
-    <div class="row">
+    <!-- Topic Heading -->
+    <h3 class="text-custom-beige mb-3 fs-4 text-body-secondary">{% trans "Science" %}</h3> <!-- Replace with dynamic topic name if available -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for video in videos %}
-        <div class="col-md-4 mb-4">
+        <!-- Check if the video belongs to the current topic -->
+        {% if video.topic == "science" %} <!-- Replace with actual topic checking logic -->
+        <div class="col"> <!-- Changed from col-md-4 to col-md-3 to make videos slightly smaller -->
             <div class="card h-100 shadow-lg video-card bg-dark-blue rounded-3"> <!-- Apply dark theme for the card -->
-                <img src="{{ video.thumbnail.url }}" loading="lazy" class="card-img-top rounded" alt="Video thumbnail" style="height: 200px; object-fit: cover;">
+                <img src="{{ video.thumbnail.url }}" loading="lazy" class="card-img-top rounded" alt="Video thumbnail" style="height: 180px; object-fit: cover;"> <!-- Adjusted height -->
                 <div class="card-body d-flex flex-column justify-content-between">
                     <h5 class="card-title text-body-secondary">{{ video.title }}</h5>
                     <div>
@@ -27,9 +32,83 @@
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
 </div>
+<div class="container mt-4">
+    <!-- Topic Heading -->
+    <h3 class="text-custom-beige mb-3 fs-4 text-body-secondary">{% trans "Education" %}</h3> <!-- Replace with dynamic topic name if available -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for video in videos %}
+        <!-- Check if the video belongs to the current topic -->
+        {% if video.topic == "education" %} <!-- Replace with actual topic checking logic -->
+        <div class="col"> <!-- Changed from col-md-4 to col-md-3 to make videos slightly smaller -->
+            <div class="card h-100 shadow-lg video-card bg-dark-blue rounded-3"> <!-- Apply dark theme for the card -->
+                <img src="{{ video.thumbnail.url }}" loading="lazy" class="card-img-top rounded" alt="Video thumbnail" style="height: 180px; object-fit: cover;"> <!-- Adjusted height -->
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title text-body-secondary">{{ video.title }}</h5>
+                    <div>
+                        <a href="{% url 'video_detail' video.id %}" class="btn btn-custom-beige bi-body-text btn-sm mb-2 w-100">&nbsp;Video Details</a> <!-- Custom beige button -->
+                        <a href="{{ video.url }}" target="_blank" class="btn btn-custom-list bi-box-arrow-up-right btn-sm mb-2 w-100">&nbsp;Original Video</a> <!-- Custom blue button -->
+                        <a href="{% url 'confirm_delete_video' video.id %}" class="btn btn-custom-delete bi-trash3-fill btn-sm w-100">&nbsp;Delete Video</a> <!-- Keep delete button distinct -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<div class="container mt-4">
+    <!-- Topic Heading -->
+    <h3 class="text-custom-beige mb-3 fs-4 text-body-secondary">{% trans "Entertainment" %}</h3> <!-- Replace with dynamic topic name if available -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for video in videos %}
+        <!-- Check if the video belongs to the current topic -->
+        {% if video.topic == "entertainment" %} <!-- Replace with actual topic checking logic -->
+        <div class="col"> <!-- Changed from col-md-4 to col-md-3 to make videos slightly smaller -->
+            <div class="card h-100 shadow-lg video-card bg-dark-blue rounded-3"> <!-- Apply dark theme for the card -->
+                <img src="{{ video.thumbnail.url }}" loading="lazy" class="card-img-top rounded" alt="Video thumbnail" style="height: 180px; object-fit: cover;"> <!-- Adjusted height -->
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title text-body-secondary">{{ video.title }}</h5>
+                    <div>
+                        <a href="{% url 'video_detail' video.id %}" class="btn btn-custom-beige bi-body-text btn-sm mb-2 w-100">&nbsp;Video Details</a> <!-- Custom beige button -->
+                        <a href="{{ video.url }}" target="_blank" class="btn btn-custom-list bi-box-arrow-up-right btn-sm mb-2 w-100">&nbsp;Original Video</a> <!-- Custom blue button -->
+                        <a href="{% url 'confirm_delete_video' video.id %}" class="btn btn-custom-delete bi-trash3-fill btn-sm w-100">&nbsp;Delete Video</a> <!-- Keep delete button distinct -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<div class="container mt-4">
+    <!-- Topic Heading -->
+    <h3 class="text-custom-beige mb-3 fs-4 text-body-secondary">{% trans "Other" %}</h3> <!-- Replace with dynamic topic name if available -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for video in videos %}
+        <!-- Check if the video belongs to the current topic -->
+        {% if video.topic == "other" %} <!-- Replace with actual topic checking logic -->
+        <div class="col"> <!-- Changed from col-md-4 to col-md-3 to make videos slightly smaller -->
+            <div class="card h-100 shadow-lg video-card bg-dark-blue rounded-3"> <!-- Apply dark theme for the card -->
+                <img src="{{ video.thumbnail.url }}" loading="lazy" class="card-img-top rounded" alt="Video thumbnail" style="height: 180px; object-fit: cover;"> <!-- Adjusted height -->
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title text-body-secondary">{{ video.title }}</h5>
+                    <div>
+                        <a href="{% url 'video_detail' video.id %}" class="btn btn-custom-beige bi-body-text btn-sm mb-2 w-100">&nbsp;Video Details</a> <!-- Custom beige button -->
+                        <a href="{{ video.url }}" target="_blank" class="btn btn-custom-list bi-box-arrow-up-right btn-sm mb-2 w-100">&nbsp;Original Video</a> <!-- Custom blue button -->
+                        <a href="{% url 'confirm_delete_video' video.id %}" class="btn btn-custom-delete bi-trash3-fill btn-sm w-100">&nbsp;Delete Video</a> <!-- Keep delete button distinct -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<!-- Repeat end -->
 
 {% else %}
 <div class="text-center mt-4 text-light bg-dark-blue">{% trans 'No Videos' %}</div>

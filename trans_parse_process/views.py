@@ -69,6 +69,7 @@ def process_form(request):
         if form.is_valid():
             url = form.cleaned_data['youtube_url']
             title = form.cleaned_data['youtube_title']
+            topic = form.cleaned_data['youtube_topic']
 
             # Check if the video already exists in the database
             if Video.objects.filter(url=url).exists():
@@ -110,7 +111,8 @@ def process_form(request):
                     url=url,
                     video_file=os.path.join('videos', filename),
                     title=title,
-                    thumbnail=thumbnail_file
+                    thumbnail=thumbnail_file,
+                    topic=topic
                 )
                 try:
                     video.save()

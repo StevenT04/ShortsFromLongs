@@ -1,10 +1,23 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
+
+TOPIC_CHOICES = [
+    ('science', 'Science'),
+    ('education', 'Education'),
+    ('entertainment', 'Entertainment'),
+    ('other', 'Other'),
+]
 
 class Video(models.Model):
     url = models.URLField(max_length=1024, unique=True)  # Source URL
     video_file = models.FileField(upload_to='videos/', unique=True)  # Path to the downloaded video
+    topic = models.CharField(
+        max_length=255,
+        choices=TOPIC_CHOICES,
+        default='other'
+    )    
     title = models.CharField(max_length=255, unique=True)  # Video title
     thumbnail = models.ImageField(upload_to='thumbnails', default='default_image.png')
     slug = models.SlugField(unique=True, blank=True)  # Slug field for pretty URLs

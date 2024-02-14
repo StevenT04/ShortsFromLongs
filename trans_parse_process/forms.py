@@ -1,10 +1,14 @@
 from django import forms
 import re
+from .models import TOPIC_CHOICES
 
 class ChunkingForm(forms.Form):
     youtube_url = forms.URLField(label='YouTube URL')
     youtube_title = forms.CharField(max_length=255, label='Video Title')
-
+    youtube_topic = forms.ChoiceField(
+        choices=TOPIC_CHOICES,
+        label='Video Topic'
+    )
     def clean_youtube_url(self):
         url = self.cleaned_data.get('youtube_url', '')
         youtube_regex = r'^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$'
