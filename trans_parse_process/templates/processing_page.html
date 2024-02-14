@@ -3,7 +3,6 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-
 {% block content %}
 <div class="container mt-4 dark-theme">
     <div class="row">
@@ -23,16 +22,18 @@
         </div>
         <div class="col-lg-9 d-grid gap-2 d-md-flex justify-content-md-start mb-3 bg-central">
             <!-- video_details.html -->
-            <form action="{% url 'page_processing' video.id %}" method="post" enctype="multipart/form-data">
+            <form action="{% url 'page_processing' video.id %}" method="post" enctype="multipart/form-data" class="w-100">
                 {% csrf_token %}
                 {{ form|crispy }}
-                <button type="submit" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold">{% trans 'Create Clip Templates' %}</button>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <button type="submit" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold">{% trans 'Create Clip Templates' %}</button>
+                    <!-- Delete Clip Templates Button -->
+                    <button type="button" class="btn btn-danger btn-lg px-4 fw-bold" onclick="location.href='{% url 'confirm_delete_templates' video.id %}'">{% trans 'Delete Clip Templates' %}</button>
+                </div>
             </form>
-    
         </div>
     </div>
 </div>
-
 
 <div id="copyConfirmation" class="alert alert-success" role="alert" style="display: none; position: fixed; top: 30px; left: 22%; transform: translateX(-50%); z-index: 1050;">
     {% trans "Text Copied!" %}

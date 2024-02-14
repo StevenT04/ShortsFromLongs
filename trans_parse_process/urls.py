@@ -10,6 +10,8 @@ urlpatterns = [
     path('chunk-video/<int:video_id>/', views.chunk_video, name='chunk_video'),
     path('<int:video_id>/delete/', views.delete_video, name='delete_video'),
     path('confirm-delete/<int:video_id>/', views.confirm_delete_video, name='confirm_delete_video'),
-    path('processing/<int:video_id>/', views.show_processing, name='page_processing')
+    path('processing/<int:video_id>/', views.show_processing, name='page_processing'),
+    path('confirm-delete-templates/<int:video_id>/', views.confirm_delete_templates, name='confirm_delete_templates'),
+    path('<int:video_id>/delete-templates/', views.delete_templates, name='delete_templates')
 
 ]

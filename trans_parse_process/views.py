@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, reverse
 from pytube import YouTube
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
@@ -270,6 +270,23 @@ def show_processing(request, video_id):
 
     # Display the form for GET requests or re-render for invalid POST submissions
     return render(request, 'processing_page.html', {'video': video, 'chunks': chunks, 'form': form})
+
+
+def confirm_delete_templates(request, video_id):
+    video = get_object_or_404(Video, pk=video_id)
+    if request.method == 'POST':
+        # Call the correct deletion function and pass only video_id
+        return delete_templates(request, video_id=video.id)
+    else:
+        # Show confirmation page
+        return render(request, 'confirm_delete_clip_templates.html', {'video': video})
+
+def delete_templates(request, video_id):
+    video = get_object_or_404(Video, pk=video_id)
     
-
-
+    # Assuming 'clips' is the related name for clip templates associated with the video
+    video.clips.all().delete()
+    messages.add_message(request, messages.INFO, _('Template Clips Deleted'))
+    
+    # Use 'reverse' for dynamic URL resolution
+    return HttpResponseRedirect(reverse_lazy('page_processing', kwargs={'video_id': video.id}))

@@ -1,0 +1,18 @@
+<!-- confirm_delete_clip_templates.html -->
+
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-4 text-body-secondary">
+    <h2>{% trans "Confirm Deletion" %}</h2>
+    <p>{% trans "Are you sure you want to delete all clip templates for this video?" %}</p>
+
+    <!-- Correct the action URL to point to the deletion function -->
+    <form method="post" action="{% url 'delete_templates' video.id %}">
+        {% csrf_token %}
+        <input type="submit" value="{% trans "Yes, delete them" %}" class="btn btn-danger">
+        <a href="{% url 'page_processing' video.id %}" class="btn btn-secondary">{% trans "No, go back" %}</a>
+    </form>
+</div>
+{% endblock %}
