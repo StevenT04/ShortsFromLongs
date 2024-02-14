@@ -176,10 +176,12 @@ def get_and_split_transcript(transcript, video_title, chunk_size):
         "- [Timestamp Duration] [Takeaway emoji] [Key takeaway in English]\n\n"
         "The timestamp should be presented in a duration format. The first set of timestamps should be the start time of the Key Takeaway, "
         "and the second set of timestamps, after the hyphen, should be the end time of the Key Takeaway, for example:\n"
-        "- [xx:xx - xx:xx]\n"
-        "- [xx:xx:xxx - yy:yy:yy]\n\n"
+        "[xx:xx - xx:xx]\n"
+        "[xx:xx:xxx - yy:yy:yy]\n\n"
         "Keep emoji relevant and unique to each Key Takeaway item. Do not use the same emoji for every takeaway. Render the brackets. "
-        "There should be no bulletpoints for each takeaway. Simply list them as a continuous list."
+        "WHEN YOU ANSWER, YOU MUST GIVE YOUR RESPONSE IN A CODE BLOCK INSTEAD OF A NORMAL TEXT OUTPUT.\n"
+        "MAKE SURE THERE IS NO LINE SEPERATION BETWEEN EACH TAKEAWAY.\n"
+        "MAKE SURE THERE IS NO HYPHEN BEFORE THE TIMESTAMPS\n"
         "Do not prepend takeaway with \"Key takeaway\".\n\n"
         f"[VIDEO TITLE]: {video_title}\n\n"
         "[VIDEO TRANSCRIPT CHUNK]:\n\n"
@@ -233,15 +235,14 @@ def show_processing(request, video_id):
         form = ProcessingForm(request.POST)
         if form.is_valid():
             chatgpt_output = form.cleaned_data['chatgpt_output']
-            pattern = r'\[(\d{2}:\d{2}(?::\d{2})?) - (\d{2}:\d{2}(?::\d{2})?)\] (.*?)(?=\r?\n|\r?\n*$)'
-            matches = re.findall(pattern, chatgpt_output, re.DOTALL)
+            pattern = r'\[(\d{2}:\d{2}(?::\d{2})?) - (\d{2}:\d{2}(?::\d{2})?)\] (.+)'
+            matches = re.findall(pattern, chatgpt_output, re.MULTILINE)
 
             for start, end, description in matches:
                 start_time = parse_duration(start)
                 end_time = parse_duration(end)
                 # Check if a ShortClip with these exact attributes already exists
                 if not ShortClip.objects.filter(
-                    Q(video=video) &
                     Q(start_time=start_time) &
                     Q(end_time=end_time) &
                     Q(description=description)
