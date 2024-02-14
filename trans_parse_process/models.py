@@ -36,7 +36,7 @@ class ShortClip(models.Model):
     video = models.ForeignKey(Video, related_name='clips', on_delete=models.CASCADE)
     start_time = models.DurationField()
     end_time = models.DurationField()
-    clip_file = models.FileField(upload_to='clips/')
+    clip_file = models.FileField(upload_to='clips/', null=True)
     description = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
 
@@ -45,7 +45,7 @@ class ShortClip(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = slugify(self.description)
             original_slug = self.slug
             counter = 1
             while ShortClip.objects.filter(slug=self.slug).exclude(id=self.id).exists():
@@ -54,4 +54,4 @@ class ShortClip(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Clip: {self.title} from {self.video.title}"
+        return f"Clip: {self.description} from {self.video.title}"

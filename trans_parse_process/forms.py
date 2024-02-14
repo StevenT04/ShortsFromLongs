@@ -24,7 +24,7 @@ class ProcessingForm(forms.Form):
         data = self.cleaned_data['chatgpt_output']
         # Update the regular expression pattern to match timestamps with or without seconds
         # The pattern now includes an optional group for seconds (:SS) in both start and end times.
-        pattern = re.compile(r'^\[\d{2}:\d{2}(:\d{2})? - \d{2}:\d{2}(:\d{2})?\] [\s\S]+?(?=\n\[\d{2}:\d{2}(:\d{2})? - |\n*$)', re.MULTILINE)
+        pattern = re.compile(r'\[(\d{2}:\d{2}(?::\d{2})?) - (\d{2}:\d{2}(?::\d{2})?)\] (.*?)(?=\r?\n|\r?\n*$)', re.DOTALL)
 
         # Split the input into lines and validate each line
         lines = data.splitlines()

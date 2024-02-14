@@ -17,6 +17,7 @@ from django import forms
 import os
 from .forms import ChunkingForm, ProcessingForm 
 from django.db.utils import IntegrityError
+from django.db.models import Q
 
 
 
@@ -232,23 +233,30 @@ def show_processing(request, video_id):
         form = ProcessingForm(request.POST)
         if form.is_valid():
             chatgpt_output = form.cleaned_data['chatgpt_output']
-            pattern = r'\[(\d{1,2}:\d{2}:\d{2})-(\d{1,2}:\d{2}:\d{2})\] (.+)'
-            matches = re.findall(pattern, chatgpt_output, re.MULTILINE)
-
-            # Optional: Delete existing clips if needed
-            # if video.clips.exists():
-            #     video.clips.all().delete()
+            pattern = r'\[(\d{2}:\d{2}(?::\d{2})?) - (\d{2}:\d{2}(?::\d{2})?)\] (.*?)(?=\r?\n|\r?\n*$)'
+            matches = re.findall(pattern, chatgpt_output, re.DOTALL)
 
             for start, end, description in matches:
                 start_time = parse_duration(start)
                 end_time = parse_duration(end)
-                ShortClip.objects.create(
-                    video=video,
-                    start_time=start_time,
-                    end_time=end_time,
-                    description=description,
-                    clip_file=None  # Placeholder for handling clip_file
-                )
+                # Check if a ShortClip with these exact attributes already exists
+                if not ShortClip.objects.filter(
+                    Q(video=video) &
+                    Q(start_time=start_time) &
+                    Q(end_time=end_time) &
+                    Q(description=description)
+                ).exists():
+                    # Only create a new ShortClip if it doesn't exist
+                    ShortClip.objects.create(
+                        video=video,
+                        start_time=start_time,
+                        end_time=end_time,
+                        description=description,
+                        clip_file=None  # Assuming handling of clip_file is done elsewhere or not required for creation
+                    )
+                else:
+                    # Optional: Add a message or take some action if the clip already exists
+                    messages.info(request, "Clip with similar attributes already exists in this set.")
 
             messages.success(request, "Clips processed successfully.")
             # Stay on the same page but indicate success
