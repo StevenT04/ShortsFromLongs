@@ -243,9 +243,9 @@ def show_processing(request, video_id):
                 end_time = parse_duration(end)
                 # Check if a ShortClip with these exact attributes already exists
                 if not ShortClip.objects.filter(
-                    Q(start_time=start_time) &
-                    Q(end_time=end_time) &
-                    Q(description=description)
+                    start_time=start_time,
+                    end_time=end_time,
+                    description=description
                 ).exists():
                     # Only create a new ShortClip if it doesn't exist
                     ShortClip.objects.create(
@@ -254,7 +254,7 @@ def show_processing(request, video_id):
                         end_time=end_time,
                         description=description,
                         clip_file=None  # Assuming handling of clip_file is done elsewhere or not required for creation
-                    )
+                )
                 else:
                     # Optional: Add a message or take some action if the clip already exists
                     messages.info(request, "Clip with similar attributes already exists in this set.")
