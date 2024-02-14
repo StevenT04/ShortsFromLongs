@@ -221,10 +221,11 @@ def parse_duration(time_str):
 
 def process_clips_form(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
+    chunks = video.chunks.all()
     
-    if video.clips.exists():
-        video.clips.all().delete()
-        messages.info(request, "Existing Clips from models Deleted, Re-Processed now.")
+    # if video.clips.exists():
+    #     video.clips.all().delete()
+    #     messages.info(request, "Existing Clips from models Deleted, Re-Processed now.")
     
     if request.method == 'POST':
         form = ProcessingForm(request.POST)
@@ -245,12 +246,15 @@ def process_clips_form(request, video_id):
                     clip_file=None  # Placeholder for clip_file handling
                 )
 
-        return redirect('video_detail', video_id=video.id)
+            return redirect('show_processing', video_id=video.id)
+        else:
+            # If form is not valid, re-render the page with the form to show validation errors
+            return render(request, 'processing_page.html', {'form': form, 'chunks': chunks, 'video': video})
 
     else:
         form = ProcessingForm()
 
-    return render(request, 'video_detail.html', {'form': form, 'video': video})
+    return render(request, 'processing_page.html', {'form': form, 'chunks': chunks, 'video': video})
 
 
 def show_processing(request, video_id):

@@ -22,14 +22,15 @@ class ProcessingForm(forms.Form):
 
     def clean_chatgpt_output(self):
         data = self.cleaned_data['chatgpt_output']
-        # Define the regular expression pattern for validation
-        pattern = re.compile(r'^\[\d{2}:\d{2} - \d{2}:\d{2}\] .+$', re.MULTILINE)
+        # Update the regular expression pattern to match timestamps with or without seconds
+        # The pattern now includes an optional group for seconds (:SS) in both start and end times.
+        pattern = re.compile(r'^\[\d{2}:\d{2}(:\d{2})? - \d{2}:\d{2}(:\d{2})?\] [\s\S]+?(?=\n\[\d{2}:\d{2}(:\d{2})? - |\n*$)', re.MULTILINE)
 
         # Split the input into lines and validate each line
         lines = data.splitlines()
         for line in lines:
-            if not pattern.match(line):
-                raise forms.ValidationError('Invalid format detected. Please ensure all lines follow the correct format: "[MM:SS - MM:SS] Description."')
+            if not re.fullmatch(pattern, line):
+                raise forms.ValidationError('Invalid format detected. Please ensure all lines follow the correct format: "[HH:MM:SS - HH:MM:SS] Description." or "[HH:MM - HH:MM] Description."')
 
         # Return the cleaned data
         return data
