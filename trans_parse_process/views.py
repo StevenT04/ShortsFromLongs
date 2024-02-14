@@ -219,14 +219,15 @@ def parse_duration(time_str):
     return timedelta(hours=hours, minutes=minutes, seconds=seconds)
 
 
-def process_clips_form(request, video_id):
+
+def show_processing(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
     chunks = video.chunks.all()
-    
-    # if video.clips.exists():
-    #     video.clips.all().delete()
-    #     messages.info(request, "Existing Clips from models Deleted, Re-Processed now.")
-    
+
+    if not Chunk.objects.filter(video_id=video_id).exists():
+        messages.error(request, "Please load chunks for this video.")
+        return redirect('video_detail', video_id=video_id)
+
     if request.method == 'POST':
         form = ProcessingForm(request.POST)
         if form.is_valid():
@@ -234,38 +235,31 @@ def process_clips_form(request, video_id):
             pattern = r'\[(\d{1,2}:\d{2}:\d{2})-(\d{1,2}:\d{2}:\d{2})\] (.+)'
             matches = re.findall(pattern, chatgpt_output, re.MULTILINE)
 
+            # Optional: Delete existing clips if needed
+            # if video.clips.exists():
+            #     video.clips.all().delete()
+
             for start, end, description in matches:
                 start_time = parse_duration(start)
                 end_time = parse_duration(end)
-
                 ShortClip.objects.create(
                     video=video,
                     start_time=start_time,
                     end_time=end_time,
                     description=description,
-                    clip_file=None  # Placeholder for clip_file handling
+                    clip_file=None  # Placeholder for handling clip_file
                 )
 
-            return redirect('show_processing', video_id=video.id)
+            messages.success(request, "Clips processed successfully.")
+            # Stay on the same page but indicate success
+            return render(request, 'processing_page.html', {'video': video, 'chunks': chunks, 'form': ProcessingForm()})  # Reset form
         else:
             # If form is not valid, re-render the page with the form to show validation errors
-            return render(request, 'processing_page.html', {'form': form, 'chunks': chunks, 'video': video})
-
+            messages.error(request, "There was an error processing your form.")
     else:
         form = ProcessingForm()
 
-    return render(request, 'processing_page.html', {'form': form, 'chunks': chunks, 'video': video})
-
-
-def show_processing(request, video_id):
-    
-    if not Chunk.objects.filter(video_id=video_id).exists():
-        messages.error(request, "Please load chunks for this video.")
-        return redirect('video_detail', video_id=video_id)
-    else:
-        video = get_object_or_404(Video, pk=video_id)
-        chunks = video.chunks.all()  # Assuming a related_name='chunks' in the Video model
-        form = ProcessingForm()
+    # Display the form for GET requests or re-render for invalid POST submissions
     return render(request, 'processing_page.html', {'video': video, 'chunks': chunks, 'form': form})
     
 
