@@ -53,6 +53,14 @@ class ShortClip(models.Model):
     description = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
 
+    def duration(self):
+        duration = self.end_time - self.start_time
+        # Format the duration as you like. Here's a simple example:
+        total_seconds = int(duration.total_seconds())
+        hours, remainder = divmod(total_seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"{hours}h {minutes}m {seconds}s"
+    
     def get_absolute_url(self):
         return reverse('clip_detail', kwargs={'slug': self.slug})
 
