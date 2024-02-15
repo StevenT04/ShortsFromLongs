@@ -4,7 +4,7 @@ from pytube import YouTube
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.utils.translation import gettext as _
-from .models import Video, Chunk, ShortClip
+from .models import Video, Chunk, ShortClip, TOPIC_CHOICES
 import re
 from datetime import timedelta
 import ffmpeg
@@ -29,9 +29,16 @@ def show_home(request):
 def show_about(request):
     return render(request, 'about.html')
 
+
 def show_video_list(request):
-    videos = Video.objects.all()
-    return render(request, 'video_list.html', {'videos': videos})
+    topic_videos = []
+    for topic_choice in TOPIC_CHOICES:
+        topic_code, topic_name = topic_choice
+        videos_in_topic = Video.objects.filter(topic=topic_code)
+        if videos_in_topic.exists():
+            topic_videos.append((topic_name, videos_in_topic))
+    
+    return render(request, 'video_list.html', {'topic_videos': topic_videos})
 
 def delete_video(request, video_id=None, video_slug=None):
     video = get_object_or_404(Video, pk=video_id)
@@ -292,3 +299,8 @@ def delete_templates(request, video_id):
     
     # Use 'reverse' for dynamic URL resolution
     return HttpResponseRedirect(reverse_lazy('page_processing', kwargs={'video_id': video.id}))
+
+def manage_clips(request, video_id):
+    video = get_object_or_404(Video, pk=video_id)
+    clips = video.clips.all()
+    return render(request, 'manage_clips.html', {'video': video, 'clips': clips})

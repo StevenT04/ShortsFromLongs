@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block page_title %}
+<div class="container mt-4 p-4 text-light bg-dark-blue rounded-3">
+    <h2>{% trans "Manage Clips" %}</h2>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if clips %}
+
+<div class="container mt-4">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for clip in clips %}
+        <div class="col">
+            <div class="card h-100 shadow-lg video-card bg-dark-blue rounded-3">
+                <!-- Placeholder for clip image if available -->
+                <div class="card-header">
+                    <h5 class="card-title text-body-secondary">{{ clip.video.title }} Clip</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <p class="card-text"><strong>{% trans "Description:" %}</strong> {{ clip.description }}</p>
+                    <p class="card-text"><strong>{% trans "Start Time:" %}</strong> {{ clip.start_time|duration }}</p>
+                    <p class="card-text"><strong>{% trans "End Time:" %}</strong> {{ clip.end_time|duration }}</p>
+                    <div>
+                        {% if clip.clip_file %}
+                        <a href="{{ clip.clip_file.url }}" class="btn btn-custom-list btn-sm mb-2 w-100">&nbsp;{% trans "Download Clip" %}</a>
+                        {% else %}
+                        <button class="btn btn-secondary btn-sm mb-2 w-100" disabled>&nbsp;{% trans "Processing..." %}</button>
+                        {% endif %}
+                        {% comment %} <a href="{% url 'edit_clip' clip.id %}" class="btn btn-custom-beige btn-sm mb-2 w-100">&nbsp;{% trans "Edit Clip" %}</a> {% endcomment %}
+                        {% comment %} <a href="{% url 'confirm_delete_clip' clip.id %}" class="btn btn-custom-delete btn-sm w-100">&nbsp;{% trans "Delete Clip" %}</a> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% else %}
+<div class="text-center mt-4 text-light bg-dark-blue">{% trans 'No Clips Found' %}</div>
+{% endif %}
+
+<div class="text-left mt-4">
+    <a href="{% url 'video_list' %}" class="btn btn-custom-blue">&nbsp;{% trans 'Back to Video List' %}</a>
+</div>
+
+{% endblock %}
