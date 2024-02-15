@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-4 text-body-secondary">
+    <h2>{% trans "Confirm Deletion" %}</h2>
+    <p>{% trans "Are you sure you want to delete this clip?" %}</p>
+
+    <form method="post" action="{% url 'delete_clip' clip.id %}">
+        {% csrf_token %}
+        <input type="submit" value="{% trans "Yes, delete it" %}" class="btn btn-danger">
+        <a href="{% url 'manage_clips' clip.video.id %}" class="btn btn-secondary">{% trans "No, go back" %}</a>
+    </form>
+</div>
+{% endblock %}

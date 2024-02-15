@@ -404,3 +404,32 @@ def download_clip(request, clip_id):
     #     response = HttpResponse(fh.read(), content_type="video/mp4")
     #     response['Content-Disposition'] = f'attachment; filename=clip_{clip.pk}.mp4'
     #     return response
+    
+    
+def confirm_delete_clip(request, clip_id=None):
+    clip = get_object_or_404(ShortClip, pk=clip_id)
+    if request.method == 'POST':
+        # Proceed with deletion if the form is submitted
+        return delete_clip(request, clip_id=clip.id)
+    else:
+        # Show confirmation page
+        return render(request, 'confirm_delete_clip.html', {'clip': clip})
+    
+def delete_clip(request, clip_id=None):
+    clip = get_object_or_404(ShortClip, pk=clip_id)
+    video_id = clip.video.id  # Capture the video_id before deleting the clip
+    
+    clip_file_path = os.path.join(settings.MEDIA_ROOT, str(clip.clip_file))
+    
+    # Check if the clip file exists and delete it
+    if clip.clip_file and os.path.isfile(clip_file_path):
+        os.remove(clip_file_path)
+    
+    # Delete the clip object
+    clip.delete()
+    messages.add_message(request, messages.INFO, 'Clip Deleted')
+    
+    # Correctly use the reverse function to generate the URL for redirection
+    manage_clips_url = reverse('manage_clips', kwargs={'video_id': video_id})
+    return HttpResponseRedirect(manage_clips_url)
+
