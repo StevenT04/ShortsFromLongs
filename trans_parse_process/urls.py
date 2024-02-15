@@ -13,6 +13,6 @@ urlpatterns = [
     path('processing/<int:video_id>/', views.show_processing, name='page_processing'),
     path('confirm-delete-templates/<int:video_id>/', views.confirm_delete_templates, name='confirm_delete_templates'),
     path('<int:video_id>/delete-templates/', views.delete_templates, name='delete_templates'),
-    path('manage-clips/<int:video_id>/', views.manage_clips, name='manage_clips')
-
+    path('manage-clips/<int:video_id>/', views.manage_clips, name='manage_clips'),
+    path('download-clip/<int:clip_id>/', views.download_clip, name='download_clip')
 ]

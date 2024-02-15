@@ -29,11 +29,11 @@
                     <p class="card-text text-body-secondary"><strong>{% trans "Duration" %}</strong> {{ clip.duration }}</p>
                     <div>
                         {% if clip.clip_file %}
-                        <a href="{{ clip.clip_file.url }}" class="btn btn-custom-list btn-sm mb-2 w-100">&nbsp;{% trans "Download Clip" %}</a>
+                        <a href="{{ clip.clip_file.url }}" class="btn btn-custom-list btn-sm mb-2 w-100">&nbsp;{% trans "Preview" %}</a>
                         {% else %}
                         <button class="btn btn-secondary btn-sm mb-2 w-100" disabled>&nbsp;{% trans "Processing..." %}</button>
                         {% endif %}
-                        {% comment %} <a href="{% url 'edit_clip' clip.id %}" class="btn btn-custom-beige btn-sm mb-2 w-100">&nbsp;{% trans "Edit Clip" %}</a> {% endcomment %}
+                        <a href="{% url 'download_clip' clip.id %}" class="btn btn-custom-beige btn-sm mb-2 w-100">&nbsp;{% trans "Download Clip" %}</a>
                         {% comment %} <a href="{% url 'confirm_delete_clip' clip.id %}" class="btn btn-custom-delete btn-sm w-100">&nbsp;{% trans "Delete Clip" %}</a> {% endcomment %}
                     </div>
                 </div>

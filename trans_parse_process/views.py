@@ -18,6 +18,8 @@ import os
 from .forms import ChunkingForm, ProcessingForm 
 from django.db.utils import IntegrityError
 from django.db.models import Q
+import ffmpeg
+import cv2
 
 
 
@@ -304,3 +306,101 @@ def manage_clips(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
     clips = video.clips.all()
     return render(request, 'manage_clips.html', {'video': video, 'clips': clips})
+
+
+def detect_face_and_clip_with_aspect_ratio(input_file, output_file, start_time, duration):
+    # Initialize the face detector.
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+    # Open the input video file for face detection.
+    cap = cv2.VideoCapture(input_file)
+
+    # Fetch video dimensions
+    video_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    # Set the video's start time for face detection.
+    cap.set(cv2.CAP_PROP_POS_MSEC, start_time*1000)
+
+    face_detected = False
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+
+        if len(faces) > 0:
+            x, y, w, h = faces[0]
+            face_detected = True
+            break
+
+    cap.release()
+
+    if face_detected:
+        aspect_ratio = 9 / 16
+
+        # Start by maximizing height based on the face detection
+        max_crop_height = min(video_height, h * 4)  # Adjust multiplier as needed to include more vertical space
+        max_crop_width = max_crop_height * aspect_ratio
+
+        # Adjust crop position to ensure the face is centered
+        crop_x = max(0, min(x + w/2 - max_crop_width/2, video_width - max_crop_width))
+        crop_y = max(0, min(y + h/2 - max_crop_height/2, video_height - max_crop_height))
+
+        # Recalculate dimensions if the adjusted crop exceeds video bounds
+        if crop_x + max_crop_width > video_width:
+            max_crop_width = video_width - crop_x
+            max_crop_height = max_crop_width / aspect_ratio
+        if crop_y + max_crop_height > video_height:
+            max_crop_height = video_height - crop_y
+            max_crop_width = max_crop_height * aspect_ratio
+
+        # Source video and audio streams
+        vid_stream = ffmpeg.input(input_file, ss=start_time, t=duration)
+        audio_stream = vid_stream.audio
+
+        # Crop video and apply filters for enhancement and vignette effect
+        filtered_vid_stream = vid_stream.filter('crop', w=max_crop_width, h=max_crop_height, x=crop_x, y=crop_y) \
+                                        .filter('unsharp', luma_amount=1.2) \
+                                        .filter('vignette') \
+
+        # Output - combine enhanced video with original audio
+        ffmpeg.output(filtered_vid_stream, audio_stream, output_file, acodec='copy', vcodec='libx264').run()
+    else:
+        # If no face was detected, clip the video segment without cropping.
+        ffmpeg.input(input_file, ss=start_time, t=duration) \
+              .output(output_file, acodec='copy', vcodec='libx264').run()
+              
+              
+def download_clip(request, clip_id):
+    clip = get_object_or_404(ShortClip, pk=clip_id)
+    
+    if clip.clip_file:
+        # Clip already exists, redirect or serve the existing file
+        # Redirect back to manage clips page
+        messages.error(request, "Clip already downloaded.")
+        return redirect('manage_clips', video_id=clip.video_id)
+    
+    input_file = os.path.join(settings.MEDIA_ROOT, str(clip.video.video_file))
+    output_file = os.path.join(settings.MEDIA_ROOT, "clips", f"clip_{clip.pk}.mp4")
+    
+    # Convert DurationField to total seconds
+    start_time = clip.start_time.total_seconds()
+    duration = (clip.end_time - clip.start_time).total_seconds()
+    
+    # Call the adapted function
+    detect_face_and_clip_with_aspect_ratio(input_file, output_file, start_time, duration)
+    
+    # After processing, update the clip_file field
+    clip.clip_file = os.path.join("clips", f"clip_{clip.pk}.mp4")
+    clip.save()
+    
+    # Redirect back to manage clips page or directly serve the file
+    return redirect('manage_clips', video_id=clip.video_id)
+    # If you want to directly serve the file, uncomment the following lines:
+    # with open(output_file, 'rb') as fh:
+    #     response = HttpResponse(fh.read(), content_type="video/mp4")
+    #     response['Content-Disposition'] = f'attachment; filename=clip_{clip.pk}.mp4'
+    #     return response
