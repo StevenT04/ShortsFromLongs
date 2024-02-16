@@ -363,8 +363,7 @@ def detect_face_and_clip_with_aspect_ratio(input_file, output_file, start_time, 
         audio_stream = vid_stream.audio
 
         # Crop video and apply filters for enhancement and vignette effect
-        filtered_vid_stream = vid_stream.filter('crop', w=max_crop_width, h=max_crop_height, x=crop_x, y=crop_y) \
-                                        .filter('vignette') \
+        filtered_vid_stream = vid_stream.filter('crop', w=max_crop_width, h=max_crop_height, x=crop_x, y=crop_y)
         # Output - combine enhanced video with original audio
         ffmpeg.output(filtered_vid_stream, audio_stream, output_file, acodec='copy', vcodec='libx264', preset='veryslow', crf=5).run()
     else:
