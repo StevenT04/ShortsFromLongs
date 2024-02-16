@@ -1,32 +1,33 @@
-function copyToClipboard(chunkText) {
-    // Unescape Unicode escape sequences
+function copyToClipboard(chunkText, checkboxId) {
+    // Unescape Unicode escape sequences and other escape characters
     const unescapedText = chunkText.replace(/\\u([\dA-F]{4})/gi, (match, grp) => {
         return String.fromCharCode(parseInt(grp, 16));
-    }).replace(/\\n/g, "\n") // Unescape new lines
-      .replace(/\\'/g, "'") // Unescape single quotes
-      .replace(/\\"/g, '"') // Unescape double quotes
-      .replace(/\\\\/g, '\\'); // Unescape backslashes
+    }).replace(/\\n/g, "\n")
+      .replace(/\\'/g, "'")
+      .replace(/\\"/g, '"')
+      .replace(/\\\\/g, '\\');
 
     navigator.clipboard.writeText(unescapedText).then(function() {
         console.log('Copying to clipboard was successful!');
 
-        // Get the confirmation alert element
+        // Check the corresponding checkbox
+        const checkbox = document.getElementById(checkboxId);
+        if (checkbox) {
+            checkbox.checked = true;
+        }
+
+        // Show confirmation message
         const confirmation = document.getElementById('copyConfirmation');
-        
-        // Make sure the element is visible and fully opaque before starting the fade out
         confirmation.style.display = 'block';
         confirmation.style.opacity = '1';
         
-        // Hide the confirmation message after 1 second with a fade out
+        // Hide the confirmation message after a delay with fade out
         setTimeout(() => {
-            // Start the fade out by reducing the opacity
             confirmation.style.opacity = '0';
-
-            // After the fade out duration, set display to none
             setTimeout(() => {
                 confirmation.style.display = 'none';
-            }, 500); // Set this to match your CSS transition duration
-        }, 2000); // Keep the message visible for 2 seconds before starting the fade out
+            }, 500);
+        }, 2000);
     }, function(err) {
         console.error('Could not copy text: ', err);
     });

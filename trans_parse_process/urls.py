@@ -16,6 +16,8 @@ urlpatterns = [
     path('manage-clips/<int:video_id>/', views.manage_clips, name='manage_clips'),
     path('download-clip/<int:clip_id>/', views.download_clip, name='download_clip'),
     path('confirm-delete-clip/<int:clip_id>/', views.confirm_delete_clip, name='confirm_delete_clip'),
-    path('<int:clip_id>/delete-clip/', views.delete_clip, name='delete_clip')
+    path('<int:clip_id>/delete-clip/', views.delete_clip, name='delete_clip'),
+    path('<int:clip_id>/delete-clip-download/', views.delete_clip_download, name='delete_clip_download')
+
 
 ]

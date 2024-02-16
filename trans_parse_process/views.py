@@ -182,7 +182,8 @@ def chunk_video(request, video_id):
 def get_and_split_transcript(transcript, video_title, chunk_size):
     prompt_template = (
         "I want you to only answer in English. Your goal is to extract interesting key takeaways of the next chunk of the transcript. "
-        "Takeaways MUST be 1-2 MINUTES IN LENGTH, CONCISE, INTERESTING, INFORMATIVE, and EASY to READ and UNDERSTAND.\n"
+        "Takeaways MUST be OVER 1 MINUTE IN LENGTH and LESS THAN 3 MINUTES IN LENGTH."
+        " They have to be VIRAL, INTERESTING, INFORMATIVE, and EASY to READ and UNDERSTAND.\n"
         "Each key takeaway must be a list item, of the following format:\n\n"
         "- [Timestamp Duration] [Takeaway emoji] [Key takeaway in English]\n\n"
         "The timestamp should be presented in a duration format. The first set of timestamps should be the start time of the Key Takeaway, "
@@ -433,3 +434,22 @@ def delete_clip(request, clip_id=None):
     manage_clips_url = reverse('manage_clips', kwargs={'video_id': video_id})
     return HttpResponseRedirect(manage_clips_url)
 
+
+def delete_clip_download(request, clip_id=None):
+    clip = get_object_or_404(ShortClip, pk=clip_id)
+    video_id = clip.video.id  # Capture the video_id before deleting the clip
+    
+    clip_file_path = os.path.join(settings.MEDIA_ROOT, str(clip.clip_file))
+
+    # Check if the clip file exists and delete it
+    if clip.clip_file:
+        clip.clip_file.delete()
+        
+    if os.path.isfile(clip_file_path):
+        os.remove(clip_file_path)
+        
+    messages.add_message(request, messages.INFO, 'Clip Download Deleted')
+
+    # Correctly use the reverse function to generate the URL for redirection
+    manage_clips_url = reverse('manage_clips', kwargs={'video_id': video_id})
+    return HttpResponseRedirect(manage_clips_url)

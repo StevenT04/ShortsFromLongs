@@ -34,7 +34,8 @@
                         <button class="btn btn-secondary btn-sm mb-2 w-100" disabled>&nbsp;{% trans "Processing..." %}</button>
                         {% endif %}
                         <a href="{% url 'download_clip' clip.id %}" class="btn btn-custom-beige btn-sm mb-2 w-100">&nbsp;{% trans "Download Clip" %}</a>
-                        <a href="{% url 'confirm_delete_clip' clip.id %}" class="btn btn-custom-delete btn-sm w-100">&nbsp;{% trans "Delete Clip" %}</a>
+                        <a href="{% url 'confirm_delete_clip' clip.id %}" class="btn btn-custom-delete btn-sm mb-2 w-100">&nbsp;{% trans "Delete Clip" %}</a>
+                        <a href="{% url 'delete_clip_download' clip.id %}" class="btn btn-custom-delete btn-sm w-100">&nbsp;{% trans "Delete Clip Download" %}</a>
                     </div>
                 </div>
             </div>

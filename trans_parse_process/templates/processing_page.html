@@ -12,11 +12,15 @@
                 <h4 class="text-center mb-4 text-light">Video Chunks</h4>
                 <div class="list-group dark-list-group">
                     {% for chunk in chunks %}
-                    <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-2 dark-list-item video-card rounded-2" onclick="copyToClipboard('{{ chunk.text|escapejs }}'); return false;">
+                    <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-2 dark-list-item video-card rounded-2" onclick="copyToClipboard('{{ chunk.text|escapejs }}', 'checkbox-{{ forloop.counter }}'); return false;">
                         <span class="text-light">Chunk {{ forloop.counter }}</span>
-                        <small class="text-secondary">Copy</small>
+                        <!-- Include a checkbox for marking the copied chunk -->
+                        <div>
+                            <input type="checkbox" id="checkbox-{{ forloop.counter }}" class="me-2" disabled>
+                            <small class="text-secondary">Copy</small>
+                        </div>
                     </a>
-                    {% endfor %}
+                    {% endfor %}                    
                 </div>
             </div>
         </div>
