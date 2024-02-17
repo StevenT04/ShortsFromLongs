@@ -79,28 +79,28 @@ def process_form(request):
             url = form.cleaned_data['youtube_url']
             title = form.cleaned_data['youtube_title']
             topic = form.cleaned_data['youtube_topic']
-
+ 
             # Check if the video already exists in the database
             if Video.objects.filter(url=url).exists():
                 messages.error(request, 'This video has already been downloaded.')
                 return render(request, 'home.html', {'form': form})
-            
+ 
             yt = YouTube(url)
-            stream = yt.streams.filter(file_extension='mp4').first()
+            stream = yt.streams.filter(file_extension='mp4').get_highest_resolution()
             if stream:
                 # Generate the filename
                 filename = title + '.mp4'
                 save_path = os.path.join(settings.MEDIA_ROOT, 'videos')
                 file_path = os.path.join(save_path, filename)
-                
+ 
                 # Check if the file already exists
                 if os.path.exists(file_path):
                     messages.error(request, 'This video has already been downloaded.')
                     return render(request, 'home.html', {'form': form})
-                
+ 
                 # Download video
                 stream.download(output_path=save_path, filename=filename)
-
+ 
                 # Download thumbnail
                 thumbnail_url = yt.thumbnail_url
                 response = requests.get(thumbnail_url)
@@ -114,7 +114,7 @@ def process_form(request):
                     # Use default thumbnail if download fails
                     thumbnail_file = 'default_image.png'
                     messages.warning(request, 'Failed to download thumbnail, using default.')
-
+ 
                 # Create a new Video instance and save it to the database
                 video = Video(
                     url=url,
@@ -132,7 +132,7 @@ def process_form(request):
                     if thumbnail_file != 'default_image.png':
                         os.remove(thumbnail_path)
                     return render(request, 'home.html', {'form': form})
-
+ 
                 # Redirect to the video list page
                 messages.success(request, 'Video downloaded successfully.')
                 return HttpResponseRedirect('/video-list/')
@@ -369,7 +369,7 @@ def detect_face_and_clip_with_aspect_ratio(input_file, output_file, start_time, 
     else:
         # If no face was detected, clip the video segment without cropping.
         ffmpeg.input(input_file, ss=start_time, t=duration) \
-              .output(output_file, acodec='copy', vcodec='libx264').run()
+              .output(output_file, acodec='copy', vcodec='libx264', preset='veryslow', crf=5).run()
               
               
 def download_clip(request, clip_id):
