@@ -4,20 +4,24 @@
 /* Or, if you want to change the background color of the content area specifically */
 
 .bg-background {
-    background-color: #445566;
+    background-color: rgb(27, 30, 35);
 }
 
 .btn-dark {
-    background-color: #1E263D;
-    border-color: #0B0C10; /* A slightly darker shade for borders */
+    background-color: #00100f;
+    border-color: #3b2360; /* A slightly darker shade for borders */
 }
 
+body {
+    padding-top: 100px; /* Adjust this value based on the actual height of your navbar */
+  }  
+
 .card-title {
-    color: #0B0C10;
+    color: #00100f;
 }
 
 .nav-link, .ultra-shorts-color, .text-body-secondary, .bg-central{
-    color: #DAD5CF !important;
+    color: #dacebf !important;
 }
 
 
@@ -29,15 +33,18 @@
 /* STYLINGS UNDERNEATH ARE FOR VIDEO_LIST*/
 
 .btn-custom-beige {
-    background-color: #d2b48c; /* Beige color */
-    color: #3E2723; /* Dark text for contrast */
+    background-color: #072f2e; /* Beige color */
+    border-color: #176463;
+    color: #badbda; /* Dark text for contrast */
 }
 .btn-custom-beige:hover {
-    background-color: #e4cda7; /* Lighter beige on hover */
+    background-color: #0c4140; /* Lighter beige on hover */
+    color: #dcbdb8; /* Dark text for contrast */
 }
 
 .btn-custom-list {
-    background-color: #293A48; /* Custom blue */
+    background-color: #00100f; /* Custom blue */
+    border-color: #04433e;
     color: #fff; /* Light text for contrast */
 }
 .btn-custom-list:hover {
@@ -88,13 +95,13 @@
         transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* Smooth transition for interactions */
         width: 100%; /* Make the button full width of its container */
         /* Custom styles */
-        background-color: #343a40; /* Dark background */
+        background-color: rgb(29, 17, 65); /* Dark background */
         border: none; /* Remove border */
         color: #fff; /* Text color */
     }
 }
 .btn-custom-process:hover {
-    background-color: #23272b; /* Slightly lighter dark shade on hover */
+    background-color: #31165b; /* Slightly lighter dark shade on hover */
     color: #ffffff; /* Maintain text color */
     box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5); /* Subtle shadow for depth */
 }
@@ -123,8 +130,8 @@
 
 
 .bg-dark-blue {
-    background-color: #1F2F45; /* Example dark blue */
-    border: 2px solid #2f486a;
+    background-color: rgb(14, 15, 20); /* Example dark blue */
+    border: 2px solid #0c2c58;
 }
 
 .text-light {
@@ -132,7 +139,7 @@
 }
 
 .btn-custom-blue {
-    background-color: #293A48; /* Custom blue */
+    background-color: rgb(102, 63, 221); /* Custom blue */
     color: #F5F5F5;
     border: none;
 }

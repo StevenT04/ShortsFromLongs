@@ -8,8 +8,8 @@
 
     <form method="post" action="{% url 'confirm_delete_video' video.id%}">
         {% csrf_token %}
-        <input type="submit" value="{% trans "Yes, delete it" %}" class="btn btn-danger">
-        <a href="{% url 'page_video_list' %}" class="btn btn-secondary">{% trans "No, go back" %}</a>
+        <input type="submit" value="{% trans "Yes, delete it" %}" class="btn btn-danger bi-trash">
+        <a href="{% url 'page_video_list' %}" class="btn btn-secondary bi-arrow-return-left">&nbsp;{% trans "No, go back" %}</a>
     </form>
 </div>
 {% endblock %}

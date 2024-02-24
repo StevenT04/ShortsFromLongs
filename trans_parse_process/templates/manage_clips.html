@@ -29,13 +29,13 @@
                     <p class="card-text text-body-secondary"><strong>{% trans "Duration" %}</strong> {{ clip.duration }}</p>
                     <div>
                         {% if clip.clip_file %}
-                        <a href="{{ clip.clip_file.url }}" target="_blank" class="btn btn-custom-list btn-sm mb-2 w-100">&nbsp;{% trans "Preview" %}</a>
+                        <a href="{{ clip.clip_file.url }}" target="_blank" class="btn bi-camera-video btn-custom-list btn-sm mb-2 w-100">&nbsp;{% trans "Preview" %}</a>
                         {% else %}
                         <button class="btn btn-secondary btn-sm mb-2 w-100" disabled>&nbsp;{% trans "Processing..." %}</button>
                         {% endif %}
-                        <a href="{% url 'download_clip' clip.id %}" class="btn btn-custom-beige btn-sm mb-2 w-100">&nbsp;{% trans "Download Clip" %}</a>
-                        <a href="{% url 'confirm_delete_clip' clip.id %}" class="btn btn-custom-delete btn-sm mb-2 w-100">&nbsp;{% trans "Delete Clip" %}</a>
-                        <a href="{% url 'delete_clip_download' clip.id %}" class="btn btn-custom-delete btn-sm w-100">&nbsp;{% trans "Delete Clip Download" %}</a>
+                        <a href="{% url 'download_clip' clip.id %}" class="btn btn-custom-beige bi-download btn-sm mb-2 w-100">&nbsp;{% trans "Download Clip" %}</a>
+                        <a href="{% url 'confirm_delete_clip' clip.id %}" class="btn bi-exclamation-triangle-fill btn-custom-delete btn-sm mb-2 w-100">&nbsp;{% trans "Delete Clip" %}</a>
+                        <a href="{% url 'delete_clip_download' clip.id %}" class="btn btn-custom-delete bi-trash btn-sm w-100">&nbsp;{% trans "Delete Clip Download" %}</a>
                     </div>
                 </div>
             </div>

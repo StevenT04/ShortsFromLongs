@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block page_title %}
-<div class="container mt-4 p-4 text-light bg-dark-blue rounded-3">
+<div class="container mt-4 p-4 text-body-secondary bg-dark-blue rounded-3">
     <h2>{% trans "Video Catalogue" %}</h2>
 </div>
 {% endblock %}
@@ -23,9 +23,9 @@
                             <h5 class="card-title text-body-secondary">{{ video.title }}</h5>
                             <div>
                                 <a href="{% url 'video_detail' video.id %}" class="btn btn-custom-beige bi-body-text btn-sm mb-2 w-100">&nbsp;Video Details</a> <!-- Custom beige button -->
+                                <a href="{% url 'manage_clips' video.id %}" class="btn btn-custom-beige bi-collection btn-sm mb-2 w-100">&nbsp;Manage Clips</a> 
                                 <a href="{{ video.url }}" target="_blank" class="btn btn-custom-list bi-box-arrow-up-right btn-sm mb-2 w-100">&nbsp;Original Video</a> <!-- Custom blue button -->
-                                <a href="{% url 'confirm_delete_video' video.id %}" class="btn btn-custom-delete bi-trash3-fill btn-sm mb-2 w-100">&nbsp;Delete Video</a> <!-- Keep delete button distinct -->
-                                <a href="{% url 'manage_clips' video.id %}" class="btn btn-custom-beige bi-collection btn-sm w-100">&nbsp;Manage Clips</a> 
+                                <a href="{% url 'confirm_delete_video' video.id %}" class="btn btn-custom-delete bi-trash3-fill btn-sm w-100">&nbsp;Delete Video</a> <!-- Keep delete button distinct -->
                             </div>
                         </div>
                     </div>

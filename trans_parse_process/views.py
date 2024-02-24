@@ -8,6 +8,7 @@ from .models import Video, Chunk, ShortClip, TOPIC_CHOICES
 import re
 from datetime import timedelta
 import ffmpeg
+import tempfile
 from django.contrib import messages
 from youtube_transcript_api import YouTubeTranscriptApi
 from urllib.parse import urlparse, parse_qs
@@ -190,11 +191,12 @@ def chunk_video(request, video_id):
 
 def get_and_split_transcript(transcript, video_title, chunk_size):
     prompt_template = (
-        "I want you to only answer in English. Your goal is to extract interesting key takeaways of the next chunk of the transcript. "
-        "Takeaways MUST be OVER 1 MINUTE IN LENGTH and LESS THAN 3 MINUTES IN LENGTH."
-        " They have to be VIRAL, INTERESTING, INFORMATIVE, and EASY to READ and UNDERSTAND.\n"
+        "Your goal is to extract interesting key takeaways of the next chunk of the transcript. "
+        "Takeaways MUST be OVER 1 MINUTE - 1 MINUTE 30 SECONDS IN LENGTH.\n"
+        "They have to be VIRAL, INTERESTING, INFORMATIVE, and EASY to READ and UNDERSTAND.\n"
+        "EACH TAKEAWAY MUST START WITH OFF WITH A HOOK TO CAPTIVATE THE LISTENER.\n"
         "Each key takeaway must be a list item, of the following format:\n\n"
-        "- [Timestamp Duration] [Takeaway emoji] [Key takeaway in English]\n\n"
+        "[Timestamp Duration] [Takeaway emoji] [Key takeaway in English]\n\n"
         "The timestamp should be presented in a duration format. The first set of timestamps should be the start time of the Key Takeaway, "
         "and the second set of timestamps, after the hyphen, should be the end time of the Key Takeaway, for example:\n"
         "[xx:xx - xx:xx]\n"
@@ -317,73 +319,13 @@ def manage_clips(request, video_id):
     clips = video.clips.all()
     return render(request, 'manage_clips.html', {'video': video, 'clips': clips})
 
-
 def detect_face_and_clip_with_aspect_ratio(input_file, output_file, start_time, duration):
-    # Initialize the face detector.
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-    # Open the input video file for face detection.
-    cap = cv2.VideoCapture(input_file)
-
-    # Fetch video dimensions
-    video_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-    # Set the video's start time for face detection.
-    cap.set(cv2.CAP_PROP_POS_MSEC, start_time*1000)
-
-    face_detected = False
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-
-        if len(faces) > 0:
-            x, y, w, h = faces[0]
-            face_detected = True
-            break
-
-    cap.release()
-
-    if face_detected:
-        aspect_ratio = 9 / 16
-
-        # Start by maximizing height based on the face detection
-        max_crop_height = min(video_height, h * 4)  # Adjust multiplier as needed to include more vertical space
-        max_crop_width = max_crop_height * aspect_ratio
-
-        # Adjust crop position to ensure the face is centered
-        crop_x = max(0, min(x + w/2 - max_crop_width/2, video_width - max_crop_width))
-        crop_y = max(0, min(y + h/2 - max_crop_height/2, video_height - max_crop_height))
-
-        # Recalculate dimensions if the adjusted crop exceeds video bounds
-        if crop_x + max_crop_width > video_width:
-            max_crop_width = video_width - crop_x
-            max_crop_height = max_crop_width / aspect_ratio
-        if crop_y + max_crop_height > video_height:
-            max_crop_height = video_height - crop_y
-            max_crop_width = max_crop_height * aspect_ratio
-
-        # Source video and audio streams
         vid_stream = ffmpeg.input(input_file, ss=start_time, t=duration)
-        audio_stream = vid_stream.audio
-
-        # Crop video and apply filters for enhancement and vignette effect
-        filtered_vid_stream = vid_stream.filter('crop', w=max_crop_width, h=max_crop_height, x=crop_x, y=crop_y) \
-                                                .filter('vignette') \
-                                                .drawtext(text='VALUEWORK', fontfile='/Users/stevenmain/Downloads/Anurati-Regular.otf', fontsize=40, fontcolor='white', x='(main_w-text_w)/2', y='(main_h-text_h)/2')
-
         # Output - combine enhanced video with original audio
-        ffmpeg.output(filtered_vid_stream, audio_stream, output_file, acodec='copy', vcodec='libx264', preset='medium', crf=17).run()
-    else:
-        # If no face was detected, clip the video segment without cropping.
-        ffmpeg.input(input_file, ss=start_time, t=duration) \
-              .output(output_file, acodec='copy', vcodec='libx264', preset='veryslow', crf=5).run()
-
-
+        ffmpeg.output(vid_stream, output_file, acodec='copy', vcodec='libx264', preset='fast', crf=17).run()
+        
+        
 def download_clip(request, clip_id):
     clip = get_object_or_404(ShortClip, pk=clip_id)
 

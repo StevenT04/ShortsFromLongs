@@ -18,14 +18,14 @@
             <div class="mt-4">
                 <form action="{% url 'chunk_video' video.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-custom-blue text-light mb-3">Chunk Transcript</button>
+                    <button type="submit" class="btn btn-custom-blue bi-stack text-light mb-3">&nbsp;Chunk Transcript</button>
                 </form>
             </div>
             {%else%}
             <div class="mt-4">
                 <form action="{% url 'chunk_video' video.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-custom-blue text-light mb-3">Re-Chunk Transcript</button>
+                    <button type="submit" class="btn btn-custom-blue bi-stack text-light mb-3">&nbsp;Re-Chunk Transcript</button>
                 </form>
             </div>
 
@@ -50,10 +50,17 @@
             </div>
             
             <!-- Dynamic Content or Placeholder -->
-            <div class=" col-4 d-md">
-                <a href="{% url 'page_processing' video.id%}" class="btn btn-dark btn-lg px-4 me-md-2 fw-bold btn-custom-process rounded-3 video-card">
-                    {% trans 'Process Clip Templates' %}
-                </a>                
+            <div class="col-8">
+                <div class="mb-3">
+                    <a href="{% url 'page_processing' video.id %}" class="btn btn-dark btn-lg w-100 bi-cpu fw-bold btn-custom-process rounded-2 video-card">
+                        {% trans 'Process Clip Templates' %}
+                    </a>
+                </div>
+                <div>
+                    <a href="{% url 'manage_clips' video.id %}" class="btn btn-custom-beige bi-collection btn-lg w-100 btn-custom-manage rounded-2 video-card">
+                        &nbsp;Manage Clips
+                    </a> 
+                </div>
             </div>
         </div>
     </div>
