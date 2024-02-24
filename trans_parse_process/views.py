@@ -323,7 +323,7 @@ def detect_face_and_clip_with_aspect_ratio(input_file, output_file, start_time, 
 
         vid_stream = ffmpeg.input(input_file, ss=start_time, t=duration)
         # Output - combine enhanced video with original audio
-        ffmpeg.output(vid_stream, audio_stream, output_file, acodec='copy', vcodec='libx264', preset='fast', crf=17).run()
+        ffmpeg.output(vid_stream, output_file, acodec='copy', vcodec='libx264', preset='fast', crf=17).run()
         
         
 def download_clip(request, clip_id):
