@@ -31,7 +31,7 @@
                 {{ form|crispy }}
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                     <button type="submit" class="btn btn-dark bi-wrench-adjustable btn-lg px-4 me-md-2 fw-bold" style="flex: 1;">&nbsp;{% trans 'Create Clip Templates' %}</button>
-                    <button class="btn btn-custom-beige bi-collection btn-lg px-4 me-md-2 fw-bold" href="{% url 'manage_clips' video.id %}" style="flex: 1;">&nbsp;Manage Clips</button> 
+                    <button class="btn btn-custom-beige bi-collection btn-lg px-4 me-md-2 fw-bold" onclick="location.href='{% url 'manage_clips' video.id %}'" style="flex: 1;">&nbsp;Manage Clips</button> 
                     <button type="button" class="btn btn-danger bi-trash btn-lg px-4 fw-bold" onclick="location.href='{% url 'confirm_delete_templates' video.id %}'" style="flex: 1;">&nbsp;{% trans 'Delete Clip Templates' %}</button>
                 </div>                
             </form>
