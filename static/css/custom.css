@@ -12,6 +12,38 @@
     border-color: #3b2360; /* A slightly darker shade for borders */
 }
 
+.navbar-custom {
+    padding: 0.5rem 1rem; /* Increase padding for larger size */
+    min-height: 70px; /* Or any other height that makes sense for your design */
+    font-size: 1.1rem; /* Increase font size for better readability */
+    background: linear-gradient(45deg, #3b2360, #00100f); /* Example gradient */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Soft shadow for depth */
+    backdrop-filter: saturate(180%) blur(20px); /* Soft blur effect */
+    -webkit-backdrop-filter: saturate(180%) blur(20px); /* For Safari */
+    opacity: 0.95; /* Semi-transparent */
+    align-self: center; /* This will vertically align the nav links to the center if the navbar-nav is a flex container */
+}
+.navbar-nav .nav-item .nav-link {
+    align-self: center; /* This will vertically align the nav links to the center if the navbar-nav is a flex container */
+    margin-right: 1rem; /* Adjust spacing between nav items */
+    transition: color 0.3s ease-in-out; /* Smooth transition for hover effect */
+}
+.navbar-nav .nav-item .nav-link:hover {
+    color: #daf7a6; /* Change color on hover for visual feedback */
+}
+.navbar-toggler {
+    align-self: center;
+    border-color: rgba(255, 255, 255, 0.1); /* Adjust the border color for visibility */
+}
+
+.navbar-brand img {
+    display: flex;
+    align-items: center; /* This will vertically center the logo and text within the navbar-brand */
+    width: 50px; /* Increase logo size */
+    height: auto; /* Maintain aspect ratio */
+}
+
+
 body {
     padding-top: 100px; /* Adjust this value based on the actual height of your navbar */
     margin: 0;
@@ -27,11 +59,17 @@ body {
     color: #00100f;
 }
 
-.nav-link, .ultra-shorts-color, .text-body-secondary, .bg-central{
+.ultra-shorts-color, .text-body-secondary, .bg-central{
     color: #dacebf !important;
 }
 
-
+.bg-central {
+    color: #dacebf !important;
+    border: #072f2e;
+    text-shadow: 0 0 50px #000000, /* Outer shadow for glow effect */
+                 0 0 4px #1f1313; /* Inner shadow for depth */
+}
+  
 .video-card:hover {
     transform: scale(1.03);
     transition: transform .2s; /* Smooth scaling effect */
@@ -127,10 +165,14 @@ body {
 
 .dark-theme .text-light {
     color: #DAD5CF !important; /* Ensure text is light */
+    text-shadow: 0 0 50px #340505, /* Outer shadow for glow effect */
+                 0 0 4px #1f1313; /* Inner shadow for depth */
 }
 
 .dark-theme .text-secondary {
     color: #DAD5CF !important; /* Light grey text for less important items */
+    text-shadow: 0 0 50px #340505, /* Outer shadow for glow effect */
+                 0 0 4px #1f1313; /* Inner shadow for depth */
 }
 
 /*STYLE BELOW ARE FOR TITLE OF VIDEO_DETAILS PAGE*/
