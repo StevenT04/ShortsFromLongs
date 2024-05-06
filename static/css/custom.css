@@ -22,6 +22,7 @@
     -webkit-backdrop-filter: saturate(180%) blur(20px); /* For Safari */
     opacity: 0.95; /* Semi-transparent */
     align-self: center; /* This will vertically align the nav links to the center if the navbar-nav is a flex container */
+    border-bottom: #3b2360;
 }
 .navbar-nav .nav-item .nav-link {
     align-self: center; /* This will vertically align the nav links to the center if the navbar-nav is a flex container */

@@ -176,7 +176,7 @@ def chunk_video(request, video_id):
         if not video_id:
             raise Exception("Invalid YouTube URL.")
         transcript = YouTubeTranscriptApi.get_transcript(video_id)
-        chunks = get_and_split_transcript(transcript, video.title, 17000)
+        chunks = get_and_split_transcript(transcript, video.title, 15000)
 
         # Save chunks to database
         for chunk_text in chunks:
@@ -192,7 +192,7 @@ def chunk_video(request, video_id):
 def get_and_split_transcript(transcript, video_title, chunk_size):
     prompt_template = (
         "Your goal is to extract interesting key takeaways of the next chunk of the transcript. "
-        "Takeaways MUST be OVER 1 MINUTE - 1 MINUTE 30 SECONDS IN LENGTH.\n"
+        "Takeaways MUST be roughly 3 MINUTES IN LENGTH.\n"
         "They have to be VIRAL, INTERESTING, INFORMATIVE, and EASY to READ and UNDERSTAND.\n"
         "EACH TAKEAWAY MUST START WITH OFF WITH A HOOK TO CAPTIVATE THE LISTENER.\n"
         "Each key takeaway must be a list item, of the following format:\n\n"
